@@ -38,8 +38,9 @@
         MsgboxI          PROTO :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
 
         DrawProc         PROTO hDC:DWORD
-
-        GameProc         PROTO :DWORD
+        GameProc         PROTO
+        KeydownProc      PROTO wParam:DWORD
+        KeyupProc        PROTO wParam:DWORD
 
 ; ÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-
 

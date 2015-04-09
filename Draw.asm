@@ -4,8 +4,8 @@
     .model flat, stdcall        ; 32 bit memory model
     option casemap :none        ; case sensitive
 
-    include XinyiRun.inc         ; local includes for this file
-    include Vars.inc
+include XinyiRun.inc         ; local includes for this file
+include Vars.inc
 
 
 .code
@@ -40,10 +40,12 @@ DrawProc PROC hDC:DWORD
   ; The 4 GDI functions use the pen colour set above
   ; and fill the area with the current brush.
   ; ------------------------------------------------
-  	mov ebx, ellipseOffset
-  	add ebx, 100
+  	mov ebx, ellipseX
+  	add ebx, 50
+    mov ecx, ellipseY
+    add ecx, 50
 
-    invoke Ellipse,hDC,ellipseOffset,10,ebx,110
+    invoke Ellipse,hDC,ellipseX,ellipseY,ebx,ecx
 
   ; ------------------------------------------------
 

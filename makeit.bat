@@ -9,13 +9,15 @@ if not exist rsrc.rc goto over1
 
 if exist %1.obj del XinyiRun.obj
 if exist %1.exe del XinyiRun.exe
-if exist %1.obj del Draw.obj
+if exist Draw.obj del Draw.obj
+if exist Game.obj del Game.obj
 
 : -----------------------------------------
 : assemble template.asm into an OBJ file
 : -----------------------------------------
 \masm32\BIN\Ml.exe /c /coff XinyiRun.asm
 \masm32\BIN\Ml.exe /c /coff Draw.asm
+\masm32\BIN\Ml.exe /c /coff Game.asm
 if errorlevel 1 goto errasm
 
 if not exist rsrc.obj goto nores
@@ -23,7 +25,7 @@ if not exist rsrc.obj goto nores
 : --------------------------------------------------
 : link the main OBJ file with the resource OBJ file
 : --------------------------------------------------
-\masm32\BIN\Link.exe /SUBSYSTEM:WINDOWS XinyiRun.obj rsrc.obj Draw.obj
+\masm32\BIN\Link.exe /SUBSYSTEM:WINDOWS XinyiRun.obj rsrc.obj Draw.obj Game.obj
 if errorlevel 1 goto errlink
 dir XinyiRun.*
 goto TheEnd

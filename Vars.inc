@@ -1,3 +1,3 @@
 ;vars.inc
 
-EXTERNDEF ellipseOffset:DWORD, delta:DWORD
+EXTERNDEF ellipseX:DWORD, ellipseY:DWORD, deltaX:SDWORD, deltaY:SDWORD, speed:DWORD, frames:DWORD

@@ -15,8 +15,12 @@
 
 
 .data
-ellipseOffset DWORD 10
-delta DWORD 0
+frames DWORD 0
+speed DWORD 1
+ellipseX DWORD 300
+ellipseY DWORD 200
+deltaX SDWORD 0
+deltaY SDWORD 0
 dueTime FILETIME <-1, -1>
 period DWORD 10
 
@@ -181,27 +185,20 @@ MsgLoop proc
     push eax
     push ebx
     lea ebx, msg
+
+    ;Create Timer
     INVOKE CreateWaitableTimer, NULL, FALSE, NULL
     mov hTimer, eax
     INVOKE SetWaitableTimer, hTimer, ADDR dueTime, period, NULL, NULL, 0
 msgloop:
     INVOKE  WaitForSingleObject, hTimer, 0
     .IF eax == WAIT_OBJECT_0
-        .IF [ellipseOffset] > 500
-            mov delta, 1
-        .ENDIF
-        .IF [ellipseOffset] < 20
-            mov delta, 0
-        .ENDIF
-        .IF [delta] == 0
-            mov edx, 5
-        .ELSE
-            mov edx, -5
-        .ENDIF
-        add [ellipseOffset], edx
+        ;Game Process
+        INVOKE GameProc
         INVOKE InvalidateRect, hWnd, NULL, TRUE
         jmp msgloop
     .ELSE
+        ;PeekMessage
         INVOKE PeekMessage, ebx, 0, 0, 0, PM_REMOVE
         test eax, eax
         jz msgloop
@@ -239,15 +236,19 @@ WndProc proc hWin:DWORD,uMsg:DWORD,wParam:DWORD,lParam:DWORD
     LOCAL Ps     :PAINTSTRUCT
 
     Switch uMsg
-      Case WM_COMMAND
-      ; -------------------------------------------------------------------
-        Switch wParam
-
-          case 1999
-          app_close:
+        case WM_KEYDOWN
+            INVOKE KeydownProc, wParam
+            return 0
+        case WM_KEYUP
+            INVOKE KeyupProc, wParam
+            return 0
+        case WM_COMMAND
+        ; -------------------------------------------------------------------
+            switch wParam
+                case 1999
+app_close:
             invoke SendMessage,hWin,WM_SYSCOMMAND,SC_CLOSE,NULL
-
-        Endsw
+            endsw
       ; -------------------------------------------------------------------
 
       case WM_DROPFILES
@@ -262,11 +263,11 @@ WndProc proc hWin:DWORD,uMsg:DWORD,wParam:DWORD,lParam:DWORD
 
       case WM_SIZE
 
-      case WM_PAINT
-        invoke BeginPaint,hWin,ADDR Ps
-          mov hDC, eax
-          invoke DrawProc,hDC
-        invoke EndPaint,hWin,ADDR Ps
+      case WM_PAINT ;Refresh
+        INVOKE BeginPaint, hWin, ADDR Ps
+        mov hDC, eax
+        INVOKE DrawProc, hDC
+        INVOKE EndPaint, hWin, ADDR Ps
         return 0
 
       case WM_CLOSE
