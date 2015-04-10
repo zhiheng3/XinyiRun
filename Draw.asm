@@ -40,12 +40,12 @@ DrawProc PROC hDC:DWORD
   ; The 4 GDI functions use the pen colour set above
   ; and fill the area with the current brush.
   ; ------------------------------------------------
-  	mov ebx, ellipseX
+  	mov ebx, ellipse.x
   	add ebx, 50
-    mov ecx, ellipseY
+    mov ecx, ellipse.y
     add ecx, 50
 
-    invoke Ellipse,hDC,ellipseX,ellipseY,ebx,ecx
+    invoke Ellipse,hDC,ellipse.x,ellipse.y,ebx,ecx
 
   ; ------------------------------------------------
 

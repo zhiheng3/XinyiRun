@@ -15,16 +15,36 @@
 
 
 .data
+
+;test vars
 frames DWORD 0
 speed DWORD 1
-ellipseX DWORD 300
-ellipseY DWORD 200
+ellipse MyEllipse <300,200>
 deltaX SDWORD 0
 deltaY SDWORD 0
+
+;Public vars defination
+scene DWORD 0
+;Scene 0
+selected_menu DWORD 0
+;Scene 2
+pilars Pilar 5 DUP(<0, 0, 0>)
+player_x DWORD 0
+player_y DWORD 0
+pole_x0 DWORD 0
+pole_y0 DWORD 0
+pole_x1 DWORD 0
+pole_y1 DWORD 0
+life DWORD 0
+score DWORD 0
+total_bonus DWORD 0
+add_bonus DWORD 0
+;Scene 3
+high_score DWORD 0
+
+;Timer vars defination
 dueTime FILETIME <-1, -1>
 period DWORD 10
-
-testtext BYTE "aaa", 0
 
 .code
 

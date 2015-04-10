@@ -15,12 +15,34 @@ include Vars.inc
 InitGame PROC
     mov deltaX, 0
     mov deltaY, 0
-    mov ellipseX, 300
-    mov ellipseY, 200
+    mov ellipse.x, 300
+    mov ellipse.y, 200
     mov frames, 0
     mov speed, 1
     ret
 InitGame ENDP
+
+;Pilars operation
+;Insert a random pilar in pilars[4]
+InsertPilar PROC 
+    ret
+InsertPilar ENDP
+
+;Delete pilars[0], move pilars[i] to pilars[i-1]
+DeletePilar PROC
+    ret
+DeletePilar ENDP
+
+;Move all pilars left, decrease the x-coor by 1
+MovePilar PROC
+    ret
+MovePilar ENDP
+
+;Pole operation
+;Rotate the pole by 1 degree. Point 0 is axis. (Use transformation matrix, avoid division) 
+RotatePole PROC
+    ret
+RotatePole ENDP
 
 GameProc PROC uses eax
     .IF (deltaX != 0) || (deltaY != 0)
@@ -33,21 +55,21 @@ GameProc PROC uses eax
         inc speed
     .ENDIF
 
-    mov eax, ellipseX
+    mov eax, ellipse.x
     add eax, deltaX
     .IF (eax < 0) || (eax > 560)
         INVOKE InitGame
         return 0
     .ENDIF
-    mov ellipseX, eax
+    mov ellipse.x, eax
 
-    mov eax, ellipseY
+    mov eax, ellipse.y
     add eax, deltaY
     .IF (eax < 0) || (eax > 400)
         INVOKE InitGame
         return 0
     .ENDIF
-    mov ellipseY, eax
+    mov ellipse.y, eax
     ret
 GameProc ENDP
 
