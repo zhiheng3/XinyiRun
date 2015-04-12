@@ -13,6 +13,17 @@
     include XinyiRun.inc         ; local includes for this file
     include Vars.inc
 
+;Vars defination
+
+.data?
+    hInstance      DWORD ?
+    hWnd           DWORD ?
+    hIcon          DWORD ?
+    hCursor        DWORD ?
+    CommandLine    DWORD ?
+    sWid           DWORD ?
+    sHgt           DWORD ?
+    hTimer         DWORD ?
 
 .data
 

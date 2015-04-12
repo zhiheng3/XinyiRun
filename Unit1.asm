@@ -2,6 +2,7 @@
 
 ;include \masm32\INCLUDE\masm32.inc
 include \masm32\include\masm32rt.inc
+include \masm32\macros\macros.asm
 
 Pilar STRUCT
 	start_x DWORD 0;Start x-coor
@@ -60,7 +61,8 @@ RotatePole ENDP
 
 main PROC
 	cls
-    print "Hello World",13,10
+	mov eax, 10
+    printf("%d\n", eax)
 	ret
 main ENDP
 
