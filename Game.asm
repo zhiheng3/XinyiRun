@@ -9,18 +9,24 @@
 include XinyiRun.inc         ; local includes for this file
 include Vars.inc
 
+.data
 
 .code
 
+;Initializaiton
 InitGame PROC
-    mov deltaX, 0
-    mov deltaY, 0
-    mov ellipse.x, 300
-    mov ellipse.y, 200
-    mov frames, 0
-    mov speed, 1
+    mov scene, 0
+
+    ;Scene0
+    mov selected_menu, 0
+
     ret
 InitGame ENDP
+
+GameStart PROC
+    mov scene, 2
+    ret
+GameStart ENDP
 
 ;Pilars operation
 ;Insert a random pilar in pilars[4]
@@ -73,27 +79,40 @@ GameProc PROC uses eax
     ret
 GameProc ENDP
 
-KeydownProc PROC wParam:DWORD
-    mov deltaX, 0
-    mov deltaY, 0
-    mov ebx, speed
+Scene0KeydownHandler PROC wParam:DWORD
     switch wParam
         case VK_UP
-            neg ebx
-            mov deltaY, ebx
+            .IF selected_menu > 0
+                dec selected_menu
+            .ENDIF
             return 0
         case VK_DOWN
-            mov deltaY, ebx
+            .IF selected_menu < 2
+                inc selected_menu
+            .ENDIF
             return 0
-        case VK_LEFT
-            neg ebx
-            mov deltaX, ebx
-            return 0
-        case VK_RIGHT
-            mov deltaX, ebx
-            return 0
+        case VK_RETURN
+            .IF selected_menu == 0
+                INVOKE GameStart
+                return 0
+            .ELSEIF selected_menu == 1
+                mov scene, 1
+                mov selected_menu, 0
+                return 0
+            .ELSEIF selected_menu == 2
+                return 1
+            .ENDIF
     endsw
-    ret
+    return 0
+Scene0KeydownHandler ENDP
+
+KeydownProc PROC wParam:DWORD
+    switch scene
+        case 0
+            INVOKE Scene0KeydownHandler, wParam
+            ret
+    endsw
+    return 0
 KeydownProc ENDP
 
 KeyupProc PROC wParam:DWORD

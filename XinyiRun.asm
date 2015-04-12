@@ -217,6 +217,8 @@ MsgLoop proc
     push ebx
     lea ebx, msg
 
+    INVOKE InitGame
+
     ;Create Timer
     INVOKE CreateWaitableTimer, NULL, FALSE, NULL
     mov hTimer, eax
@@ -269,6 +271,9 @@ WndProc proc hWin:DWORD,uMsg:DWORD,wParam:DWORD,lParam:DWORD
     Switch uMsg
         case WM_KEYDOWN
             INVOKE KeydownProc, wParam
+            .IF eax == 1
+                INVOKE SendMessage, hWin, WM_SYSCOMMAND, SC_CLOSE, NULL
+            .ENDIF
             return 0
         case WM_KEYUP
             INVOKE KeyupProc, wParam
