@@ -13,7 +13,7 @@ include Vars.inc
 HEIGHT = 100
 PILAR_RANDOM_RANGE_START = 20
 PILAR_RANDOM_RANGE_END = 100
-GAP_RANDOM_RANGE_START = 20
+GAP_RANDOM_RANGE_START = 40
 GAP_RANDOM_RANGE_END = 200
 
 ST_STAND = 0   ;Wait for operation
@@ -28,7 +28,8 @@ ST_DEAD = 6    ;Person dead
 state DWORD ?
 history_scene DWORD ?
 
-move_remain SDWORD -1
+.data
+move_remain SDWORD -100
 
 .code
 ;Initializaiton
@@ -110,9 +111,9 @@ InsertPilar PROC USES eax ebx ecx edx esi
     ret
 InsertPilar ENDP
 
-;Initial the pilars array which length is 5
+;Initial the pilars array which length is PILAR_NUM
 InitialPilar PROC USES ecx
-    mov ecx, 5
+    mov ecx, PILAR_NUM
 
     L1:
     INVOKE InsertPilar
@@ -157,18 +158,21 @@ DeletePilar PROC USES eax ebx ecx esi
 DeletePilar ENDP
 
 ;Move all pilars left, decrease the x-coor by 1
-MovePilar PROC USES ecx esi
+MovePilar PROC USES ecx esi ebx, Step:DWORD
+
     local structSize: DWORD
     mov esi, 0
     mov ecx, PILAR_NUM
+    mov ebx, Step
+    mov structSize, TYPE pilars
 
     L1:
     .IF pilars[esi].start_x != 0
-        dec pilars[esi].start_x
+        sub pilars[esi].start_x, ebx
     .ENDIF
 
     .IF pilars[esi].end_x != 0
-        dec pilars[esi].end_x
+        sub pilars[esi].end_x, ebx
     .ENDIF
     add esi, structSize
     loop L1
@@ -219,8 +223,12 @@ GameStart ENDP
 
 GameProc PROC uses eax
     .IF move_remain > 0
-        INVOKE MovePilar
-        dec move_remain
+        INVOKE MovePilar, 5
+        sub move_remain, 5
+    .ELSEIF move_remain != -100
+        INVOKE DeletePilar
+        INVOKE InitialPilar
+        mov move_remain, -100
     .ENDIF
     ret
 GameProc ENDP
@@ -266,7 +274,7 @@ Scene1KeydownHandler ENDP
 Scene2KeydownHandler PROC wParam:DWORD
     switch wParam
         case VK_RETURN
-            mov eax, pilars[TYPE pilars]
+            mov eax, pilars[TYPE pilars].start_x
             mov move_remain, eax
             return 0
     endsw
