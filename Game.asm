@@ -56,52 +56,6 @@ Random   proc uses ecx edx,
 Random   endp
 
 ;Pilars operation
-;Initial the pilars array which length is 5
-InitialPilar PROC USES eax ebx ecx esi
-    mov esi, 0
-    mov ecx, 5
-
-    L1:
-    .IF ecx == 5
-        jmp FirstPilar
-    .ELSE
-        jmp OtherPilar
-    .ENDIF
-
-    FirstPilar:
-    ;call Randomize
-    ;mov eax, PILAR_RANDOM_RANGE_END - PILAR_RANDOM_RANGE_START ;the max width of the pilar [20,100]
-    ;call RandomRange
-    ;add eax, PILAR_RANDOM_RANGE_START
-    INVOKE Random, PILAR_RANDOM_RANGE_START, PILAR_RANDOM_RANGE_END
-    add pilars[esi].end_x, eax
-    mov pilars[esi].height, HEIGHT
-    ;add esi, TYPE pilars
-    loop L1
-
-    OtherPilar:
-    ;call Randomize
-    ;mov eax, GAP_RANDOM_RANGE_END - GAP_RANDOM_RANGE_START ;the max width of the gap [20,200]
-    ;call RandomRange
-    ;add eax, GAP_RANDOM_RANGE_START
-    INVOKE Random, GAP_RANDOM_RANGE_START, GAP_RANDOM_RANGE_END
-    mov ebx, pilars[esi].end_x
-    add eax, ebx
-    add esi, TYPE pilars
-    mov pilars[esi].start_x, 0
-    mov pilars[esi].end_x, 0
-    mov pilars[esi].start_x, eax
-    
-    INVOKE Random, PILAR_RANDOM_RANGE_START, PILAR_RANDOM_RANGE_END
-    mov ebx, pilars[esi].start_x
-    add ebx, eax
-    mov pilars[esi].end_x, ebx
-    mov pilars[esi].height, HEIGHT
-    loop L1
-
-    ret
-InitialPilar ENDP
-
 ;Insert a random pilar ranged from 20 to 100 to pilars[4]
 InsertPilar PROC USES eax ebx ecx edx esi
     local structSize: DWORD
@@ -147,6 +101,17 @@ InsertPilar PROC USES eax ebx ecx edx esi
     mov pilars[esi].height, HEIGHT
     ret
 InsertPilar ENDP
+
+;Initial the pilars array which length is 5
+InitialPilar PROC USES ecx
+    mov ecx, 5
+
+    L1:
+    INVOKE InsertPilar
+    loop L1
+
+    ret
+InitialPilar ENDP
 
 ;Delete pilars[0], move pilars[i] to pilars[i-1]
 DeletePilar PROC USES eax ebx ecx esi
