@@ -13,19 +13,21 @@ DrawGamePlayWin  PROTO hDC:DWORD
 DrawGameOverWin  PROTO hDC:DWORD
 DrawErrorWin     PROTO hDC:DWORD
 DrawBackground   PROTO hDC:DWORD,ID:DWORD
+DrawPilars       PROTO hDC:DWORD
 DrawPictureNormal      PROTO hDC:DWORD,ID:DWORD,posX:DWORD,posY:DWORD,wid:DWORD,hei:DWORD
 DrawPictureTransparent PROTO hDC:DWORD,ID:DWORD,posX:DWORD,posY:DWORD,wid:DWORD,hei:DWORD,color:DWORD
 DrawTextF              PROTO hDC:DWORD,font_wid:DWORD,font_hei:DWORD,bold:DWORD,text_color:DWORD,text_posX:DWORD,text_posY:DWORD,text_addr:DWORD,text_size:DWORD
 DrawALine              PROTO hDC:DWORD,posX1:DWORD,posY1:DWORD,posX2:DWORD,posY2:DWORD,line_style:DWORD,line_width:DWORD,line_color:DWORD
 DrawAShape             PROTO hDC:DWORD,shape:DWORD,posX:DWORD,posY:DWORD,rect_width:DWORD,rect_height:DWORD,rect_color:DWORD,edge_color:DWORD,round_width:DWORD,round_height:DWORD
 
+
 .data
 FontName db "roman",0
 basePoxY DWORD 380
+pilarPosY1 DWORD 280
 baseHeight DWORD 20
 .code
 DrawProc PROC hDC:DWORD
-
     .IF scene == 0
         invoke DrawStartMenu,hDC
     .ELSEIF scene == 1
@@ -72,6 +74,7 @@ DrawGamePlayWin PROC hDC:DWORD
     add eax,baseHeight
     invoke DrawAShape,hDC,1,0,basePoxY,rect.right,eax,0000000h,0000000h,0,0
     pop eax
+    invoke DrawPilars,hDC
     ret
 DrawGamePlayWin ENDP
 
@@ -85,6 +88,20 @@ DrawErrorWin PROC hDC:DWORD
     ret
 DrawErrorWin ENDP
 
+DrawPilars PROC hDC:DWORD
+    LOCAL structSize: DWORD
+    pusha
+    mov structSize, TYPE pilars
+    mov esi, 0
+    mov ecx,PILAR_NUM
+DrawP:
+    invoke DrawAShape,hDC,1,pilars[esi].start_x,pilarPosY1,pilars[esi].end_x,basePoxY,0111111h,0111111h,0,0
+    add esi, structSize
+    Loop DrawP  
+    popa
+    ret
+DrawPilars ENDP
+
 DrawBackground PROC hDC:DWORD,ID:DWORD
     LOCAL rect:RECT
     invoke GetClientRect,hWnd,addr rect
@@ -95,6 +112,7 @@ DrawBackground ENDP
 DrawTextF PROC hDC:DWORD,font_wid:DWORD,font_hei:DWORD,bold:DWORD,text_color:DWORD,text_posX:DWORD,text_posY:DWORD,text_addr:DWORD,text_size:DWORD
     LOCAL hFont     :DWORD
     LOCAL hFontOld  :DWORD 
+    pusha
     invoke CreateFont,font_wid,font_hei,0,0,bold,0,0,0,DEFAULT_CHARSET,\
                             OUT_DEFAULT_PRECIS,CLIP_DEFAULT_PRECIS,\
                             DEFAULT_QUALITY,DEFAULT_PITCH or FF_ROMAN,\
@@ -109,13 +127,15 @@ DrawTextF PROC hDC:DWORD,font_wid:DWORD,font_hei:DWORD,bold:DWORD,text_color:DWO
     invoke SetBkMode,hDC,TRANSPARENT
     invoke TextOut,hDC,text_posX,text_posY,text_addr,text_size
     invoke SelectObject,hDC,hFontOld
-    invoke DeleteObject, hFont    
+    invoke DeleteObject, hFont   
+    popa 
     ret
 DrawTextF ENDP
 
 DrawPictureNormal PROC hDC:DWORD,ID:DWORD,posX:DWORD,posY:DWORD,wid:DWORD,hei:DWORD
     LOCAL hBmpsource:DWORD
     LOCAL hDCback:DWORD
+    pusha
     invoke CreateCompatibleDC,hDC
     mov hDCback,eax
     invoke LoadImage,hInstance,ID,IMAGE_BITMAP,0,0,LR_LOADTRANSPARENT or LR_LOADMAP3DCOLORS
@@ -124,12 +144,14 @@ DrawPictureNormal PROC hDC:DWORD,ID:DWORD,posX:DWORD,posY:DWORD,wid:DWORD,hei:DW
     invoke BitBlt,hDC,posX,posY,wid,hei,hDCback,0,0,SRCCOPY
     invoke DeleteObject,hBmpsource
     invoke DeleteDC,hDCback
+    popa
     ret
 DrawPictureNormal ENDP
 
 DrawPictureTransparent PROC hDC:DWORD,ID:DWORD,posX:DWORD,posY:DWORD,wid:DWORD,hei:DWORD,color:DWORD
     LOCAL hBmpsource:DWORD
     LOCAL hDCback:DWORD
+    pusha
     invoke CreateCompatibleDC,hDC
     mov hDCback,eax
     invoke LoadImage,hInstance,ID,IMAGE_BITMAP,0,0,LR_LOADTRANSPARENT or LR_LOADMAP3DCOLORS
@@ -138,12 +160,14 @@ DrawPictureTransparent PROC hDC:DWORD,ID:DWORD,posX:DWORD,posY:DWORD,wid:DWORD,h
     invoke TransparentBlt,hDC,posX,posY,wid,hei,hDCback,0,0,wid,hei,color
     invoke DeleteObject,hBmpsource
     invoke DeleteDC,hDCback
+    popa
     ret
 DrawPictureTransparent ENDP
 
 DrawALine PROC hDC:DWORD,posX1:DWORD,posY1:DWORD,posX2:DWORD,posY2:DWORD,line_style:DWORD,line_width:DWORD,line_color:DWORD
     LOCAL hPen      :DWORD
     LOCAL hPenOld   :DWORD
+    pusha
     INVOKE CreatePen, line_style, line_width, line_color
     mov hPen, eax 
     invoke SelectObject,hDC,hPen
@@ -152,6 +176,7 @@ DrawALine PROC hDC:DWORD,posX1:DWORD,posY1:DWORD,posX2:DWORD,posY2:DWORD,line_st
     invoke LineTo,hDC,posX2,posY2
     invoke SelectObject, hDC, hPenOld
     invoke DeleteObject, hPen
+    popa
     ret         
 DrawALine ENDP 
 
@@ -165,6 +190,7 @@ DrawAShape PROC hDC:DWORD,shape:DWORD,posX1:DWORD,posY1:DWORD,posX2:DWORD,posY2:
     LOCAL hBrush    :DWORD
     LOCAL hBrushOld :DWORD
     LOCAL lb        :LOGBRUSH
+    pusha
     INVOKE CreatePen, 0, 1,edge_color
     mov hPen, eax
     mov lb.lbStyle, BS_SOLID
@@ -192,7 +218,8 @@ DrawAShape PROC hDC:DWORD,shape:DWORD,posX1:DWORD,posY1:DWORD,posX2:DWORD,posY2:
     invoke DeleteObject, hBrush
 
     invoke SelectObject, hDC, hPenOld
-    invoke DeleteObject, hPen    
+    invoke DeleteObject, hPen  
+    popa  
     ret
 DrawAShape ENDP
 
