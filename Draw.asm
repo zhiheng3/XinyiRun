@@ -45,17 +45,17 @@ DrawProc ENDP
 DrawStartMenu PROC hDC:DWORD
     invoke DrawBackground,hDC,100
     .IF selected_menu == 0
-        invoke DrawPictureTransparent,hDC,400,190,170,50,50,0ff0000h
-    ;     invoke DrawPictureTransparent,hDC,600,190,170,50,50,0ffffffh
-    ;     invoke DrawPictureTransparent,hDC,800,190,170,50,50,0ffffffh
-    ; .ELSEIF selected_menu == 1
-    ;     invoke DrawPictureTransparent,hDC,400,190,170,50,50,0ffffffh
-    ;     invoke DrawPictureTransparent,hDC,600,190,170,50,50,0ffffffh
-    ;     invoke DrawPictureTransparent,hDC,800,190,170,50,50,0ffffffh
-    ; .ELSEIF selected_menu == 2
-    ;     invoke DrawPictureTransparent,hDC,400,190,170,50,50,0ffffffh
-    ;     invoke DrawPictureTransparent,hDC,600,190,170,50,50,0ffffffh
-    ;     invoke DrawPictureTransparent,hDC,800,190,170,50,50,0ffffffh
+        invoke DrawPictureTransparent,hDC,111,250,150,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,120,250,220,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,130,250,290,120,60,0ffffffh
+    .ELSEIF selected_menu == 1
+        invoke DrawPictureTransparent,hDC,110,250,150,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,121,250,220,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,130,250,290,120,60,0ffffffh
+    .ELSEIF selected_menu == 2
+        invoke DrawPictureTransparent,hDC,110,250,150,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,120,250,220,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,131,250,290,120,60,0ffffffh
     .ENDIF
     ; invoke DrawTextF,hDC,50,26,700,00000ffh,50,50,ADDR gameTitle,SIZEOF gameTitle
     ; invoke DrawTextF,hDC,30,19,700,000ffffh,250,180,ADDR startTitle,SIZEOF startTitle

@@ -8,12 +8,12 @@
 
 500 ICON MOVEABLE PURE LOADONCALL DISCARDABLE "XinyiRun.ico"
 100 BITMAP DISCARDABLE "./image/XinyiRun_menu_backgroud.bmp"
-300 BITMAP DISCARDABLE "./image/start_button_unclick.bmp"
-400 BITMAP DISCARDABLE "./image/start_button_click.bmp"
-600 BITMAP DISCARDABLE "./image/help_button_unclick.bmp"
-700 BITMAP DISCARDABLE "./image/help_button_click.bmp"
-800 BITMAP DISCARDABLE "./image/quit_button_unclick.bmp"
-900 BITMAP DISCARDABLE "./image/quit_button_click.bmp"
+110 BITMAP DISCARDABLE "./image/start_button_unclick.bmp"
+111 BITMAP DISCARDABLE "./image/start_button_click.bmp"
+120 BITMAP DISCARDABLE "./image/help_button_unclick.bmp"
+121 BITMAP DISCARDABLE "./image/help_button_click.bmp"
+130 BITMAP DISCARDABLE "./image/quit_button_unclick.bmp"
+131 BITMAP DISCARDABLE "./image/quit_button_click.bmp"
 
 VS_VERSION_INFO VERSIONINFO
 FILEVERSION 1, 0, 0, 0
