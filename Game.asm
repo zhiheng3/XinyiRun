@@ -18,11 +18,14 @@ GAP_RANDOM_RANGE_END = 200
 
 .data
 ;Random vars defination
-random_seed DWORD ?
+;random_seed DWORD ?
 
 .code
 ;Initializaiton
 InitGame PROC
+    INVOKE GetTickCount
+    mov random_seed, eax
+
     mov scene, 0
 
     ;Scene0
@@ -258,10 +261,16 @@ Scene0KeydownHandler PROC wParam:DWORD
     return 0
 Scene0KeydownHandler ENDP
 
+Scene1KeydownHandler PROC
+Scene1KeydownHandler ENDP
+
 KeydownProc PROC wParam:DWORD
     switch scene
         case 0
             INVOKE Scene0KeydownHandler, wParam
+            ret
+        case 1
+            INVOKE Scene1KeydownHandler, wParam
             ret
     endsw
     return 0

@@ -218,28 +218,37 @@ RotatePole PROC USES eax ecx,
     ret
 RotatePole ENDP
 
+DisplayPilars PROC
+    mov ecx, 5
+    mov esi, 0
+    L1:
+    push ecx
+    printf("%d ", ecx)
+    printf("%d ", pilars[esi].start_x)
+    printf("%d ", pilars[esi].end_x)
+    printf("%d\n", pilars[esi].height)
+    add esi, TYPE pilars
+    pop ecx
+    loop L1
+    ret
+DisplayPilars ENDP
+
 main PROC
     cls
     ;print "Hello World",13,10
     INVOKE GetTickCount
     mov random_seed, eax
     
-    INVOKE RotatePole, 19,70
-    printf("%d\n", pole_x1)
-    printf("%d\n", pole_y1)
+    ;INVOKE RotatePole, 19,70
+    ;printf("%d\n", pole_x1)
+    ;printf("%d\n", pole_y1)
+    INVOKE InitialPilar
 
-    ;mov ecx, 5
-    ;mov esi, 0
-    ;L1:
-    ;push ecx
-    ;;printf("%d\n", ecx)
-    ;printf("%d\n", pilars[esi].start_x)
-    ;printf("%d\n", pilars[esi].end_x)
-    ;printf("%d\n", pilars[esi].height)
-    ;printf("\n")
-    ;add esi, TYPE pilars
-    ;pop ecx
-    ;loop L1
+    INVOKE DisplayPilars
+
+    INVOKE DeletePilar
+
+    INVOKE DisplayPilars
 
     ;push ecx
     ;printf ("---------------\n")

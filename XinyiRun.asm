@@ -55,7 +55,7 @@ add_bonus DWORD 0
 high_score DWORD 0
 
 ;Random vars defination
-;random_seed DWORD ?
+random_seed DWORD ?
 
 ;Timer vars defination
 dueTime FILETIME <-1, -1>

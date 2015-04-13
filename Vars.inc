@@ -20,7 +20,8 @@ Pilar STRUCT
 	height DWORD 0;Height of pilar
 Pilar ENDS
 ;Public vars
-EXTERNDEF scene:DWORD ;Scene number, 0:Start, 1:Help, 2:Game, 3:Gameover
+
+EXTERNDEF scene:DWORD, random_seed:DWORD ;Scene number, 0:Start, 1:Help, 2:Game, 3:Gameover
 
 ;Scene 0
 EXTERNDEF selected_menu:DWORD ;0:Start, 1:Help, 2:Exit
@@ -37,7 +38,6 @@ EXTERNDEF pilars:Pilar, ;Array of pilars
           score:DWORD, ;Current score
           total_bonus:DWORD, ;Current bonus(Could be accumulated)
           add_bonus:DWORD ;Latest bonus
-          ;random_seed:DWORD
 
 ;Scene 3
 EXTERNDEF high_score:DWORD ;Highest score stored
