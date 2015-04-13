@@ -27,6 +27,7 @@ EXTERNDEF scene:DWORD, random_seed:DWORD ;Scene number, 0:Start, 1:Help, 2:Game,
 EXTERNDEF selected_menu:DWORD ;0:Start, 1:Help, 2:Exit
 
 ;Scene 2
+PILAR_NUM = 5
 EXTERNDEF pilars:Pilar, ;Array of pilars
           player_x:DWORD, ;Player position x-coor
           player_y:DWORD, ;Player position y-coor

@@ -40,7 +40,7 @@ scene DWORD 0
 ;Scene 0
 selected_menu DWORD 0
 ;Scene 2
-pilars Pilar 5 DUP(<0, 0, 0>)
+pilars Pilar PILAR_NUM DUP(<0, 0, 0>)
 player_x DWORD 0
 player_y DWORD 0
 pole_x0 DWORD 0

@@ -18,14 +18,11 @@ DrawPictureTransparent PROTO hDC:DWORD,ID:DWORD,posX:DWORD,posY:DWORD,wid:DWORD,
 DrawTextF              PROTO hDC:DWORD,font_wid:DWORD,font_hei:DWORD,bold:DWORD,text_color:DWORD,text_posX:DWORD,text_posY:DWORD,text_addr:DWORD,text_size:DWORD
 DrawALine              PROTO hDC:DWORD,posX1:DWORD,posY1:DWORD,posX2:DWORD,posY2:DWORD,line_style:DWORD,line_width:DWORD,line_color:DWORD
 DrawAShape             PROTO hDC:DWORD,shape:DWORD,posX:DWORD,posY:DWORD,rect_width:DWORD,rect_height:DWORD,rect_color:DWORD,edge_color:DWORD,round_width:DWORD,round_height:DWORD
-        
 
 .data
 FontName db "roman",0
-gameTitle db "Welcome to XinyiRun!"
-startTitle db "Start"
-helpTitle db "Help"
-exitTitle db "Exit"
+basePoxY DWORD 380
+baseHeight DWORD 20
 .code
 DrawProc PROC hDC:DWORD
 
@@ -34,7 +31,6 @@ DrawProc PROC hDC:DWORD
     .ELSEIF scene == 1
         invoke DrawHelpWin,hDC
     .ELSEIF scene == 2
-
         invoke DrawGamePlayWin,hDC
     .ELSEIF scene == 3
         invoke DrawGameOverWin,hDC
@@ -59,10 +55,6 @@ DrawStartMenu PROC hDC:DWORD
         invoke DrawPictureTransparent,hDC,120,250,220,120,60,0ffffffh
         invoke DrawPictureTransparent,hDC,131,250,290,120,60,0ffffffh
     .ENDIF
-    ; invoke DrawTextF,hDC,50,26,700,00000ffh,50,50,ADDR gameTitle,SIZEOF gameTitle
-    ; invoke DrawTextF,hDC,30,19,700,000ffffh,250,180,ADDR startTitle,SIZEOF startTitle
-    ; invoke DrawTextF,hDC,30,19,700,000ffffh,250,240,ADDR helpTitle,SIZEOF helpTitle
-    ; invoke DrawTextF,hDC,30,19,700,000ffffh,250,300,ADDR exitTitle,SIZEOF exitTitle
     ret
 DrawStartMenu ENDP
 
@@ -72,7 +64,14 @@ DrawHelpWin PROC hDC:DWORD
 DrawHelpWin ENDP  
 
 DrawGamePlayWin PROC hDC:DWORD
+    LOCAL rect:RECT
+    invoke GetClientRect,hWnd,addr rect
     invoke DrawBackground,hDC,300
+    push eax
+    mov eax,basePoxY
+    add eax,baseHeight
+    invoke DrawAShape,hDC,1,0,basePoxY,rect.right,eax,0000000h,0000000h,0,0
+    pop eax
     ret
 DrawGamePlayWin ENDP
 

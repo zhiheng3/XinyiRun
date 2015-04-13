@@ -67,7 +67,7 @@ InsertPilar PROC USES eax ebx ecx edx esi
     local structSize: DWORD
     mov structSize, TYPE pilars
     mov esi, 0
-    mov ecx, 5
+    mov ecx, PILAR_NUM
     mov structSize, TYPE pilars
 
     L1:
@@ -124,7 +124,7 @@ DeletePilar PROC USES eax ebx ecx esi
     local structSize: DWORD
     mov esi, 0
     mov ebx, 0
-    mov ecx, 5
+    mov ecx, PILAR_NUM
     mov structSize, TYPE pilars
     add ebx, structSize
 
@@ -158,7 +158,7 @@ DeletePilar ENDP
 MovePilar PROC USES ecx esi
     local structSize: DWORD
     mov esi, 0
-    mov ecx, 5
+    mov ecx, PILAR_NUM
 
     L1:
     .IF pilars[esi].start_x != 0
