@@ -232,7 +232,7 @@ msgloop:
     .IF eax == WAIT_OBJECT_0
         ;Game Process
         INVOKE GameProc
-        INVOKE InvalidateRect, hWnd, NULL, TRUE
+        INVOKE InvalidateRect, hWnd, NULL, FALSE
         jmp msgloop
     .ELSE
         ;PeekMessage
@@ -266,11 +266,13 @@ WndProc proc hWin:DWORD,uMsg:DWORD,wParam:DWORD,lParam:DWORD
     LOCAL fname  :DWORD
     LOCAL opatn  :DWORD
     LOCAL spatn  :DWORD
-    LOCAL rct    :RECT
+    LOCAL rect    :RECT
     LOCAL buffer1[260]:TCHAR ; these are two spare buffers
     LOCAL buffer2[260]:TCHAR ; for text manipulation etc..
-        LOCAL hDC    :DWORD
+    LOCAL hDC    :DWORD
     LOCAL Ps     :PAINTSTRUCT
+    LOCAL hMemDC :DWORD
+    LOCAL hBmp   :DWORD
 
     Switch uMsg
         case WM_KEYDOWN
@@ -306,7 +308,18 @@ app_close:
       case WM_PAINT ;Refresh
         INVOKE BeginPaint, hWin, ADDR Ps
         mov hDC, eax
-        INVOKE DrawProc, hDC
+
+        invoke GetClientRect,hWnd,addr rect
+        invoke CreateCompatibleDC,hDC
+        mov hMemDC,eax
+        invoke CreateCompatibleBitmap,hDC,rect.right,rect.bottom
+        mov hBmp,eax
+        invoke SelectObject,hMemDC,hBmp
+        INVOKE DrawProc,hMemDC        
+        invoke BitBlt,hDC,0,0,rect.right,rect.bottom,hMemDC,0,0,SRCCOPY
+        invoke DeleteObject,hBmp
+        invoke DeleteDC,hMemDC
+
         INVOKE EndPaint, hWin, ADDR Ps
         return 0
 

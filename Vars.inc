@@ -1,6 +1,6 @@
 ;vars.inc
 ;Define the public variables
-
+EXTERNDEF hInstance:DWORD,hWnd:DWORD,hIcon:DWORD,hCursor:DWORD,CommandLine:DWORD,sWid:DWORD,sHgt:DWORD,hTimer:DWORD
 ;test vars
 MyEllipse STRUCT
 	x DWORD 0
