@@ -13,7 +13,6 @@ EXTERNDEF deltaX:SDWORD,
           frames:DWORD,
           ellipse:MyEllipse
 
-
 ;Structure
 Pilar STRUCT
 	start_x DWORD 0;Start x-coor
@@ -27,7 +26,7 @@ EXTERNDEF scene:DWORD ;Scene number, 0:Start, 1:Help, 2:Game, 3:Gameover
 EXTERNDEF selected_menu:DWORD ;0:Start, 1:Help, 2:Exit
 
 ;Scene 2
-EXTERNDEF pilars:PTR DWORD, ;Array of pilars
+EXTERNDEF pilars:Pilar, ;Array of pilars
           player_x:DWORD, ;Player position x-coor
           player_y:DWORD, ;Player position y-coor
           pole_x0:DWORD, ;Pole left x-coor
@@ -38,6 +37,7 @@ EXTERNDEF pilars:PTR DWORD, ;Array of pilars
           score:DWORD, ;Current score
           total_bonus:DWORD, ;Current bonus(Could be accumulated)
           add_bonus:DWORD ;Latest bonus
+          ;random_seed:DWORD
 
 ;Scene 3
 EXTERNDEF high_score:DWORD ;Highest score stored

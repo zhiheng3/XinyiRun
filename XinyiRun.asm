@@ -12,7 +12,7 @@
 
     include XinyiRun.inc         ; local includes for this file
     include Vars.inc
-
+    ;include Irvine32.inc
 
 .data
 
@@ -41,6 +41,9 @@ total_bonus DWORD 0
 add_bonus DWORD 0
 ;Scene 3
 high_score DWORD 0
+
+;Random vars defination
+;random_seed DWORD ?
 
 ;Timer vars defination
 dueTime FILETIME <-1, -1>
