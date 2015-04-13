@@ -43,6 +43,7 @@ selected_menu DWORD 0
 pilars Pilar PILAR_NUM DUP(<0, 0, 0>)
 player_x DWORD 0
 player_y DWORD 0
+player_f DWORD 0
 pole_x0 DWORD 0
 pole_y0 DWORD 0
 pole_x1 DWORD 0

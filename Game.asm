@@ -13,7 +13,7 @@ include Vars.inc
 HEIGHT = 100
 PILAR_RANDOM_RANGE_START = 20
 PILAR_RANDOM_RANGE_END = 100
-GAP_RANDOM_RANGE_START = 40
+GAP_RANDOM_RANGE_START = 50
 GAP_RANDOM_RANGE_END = 200
 
 ST_STAND = 0   ;Wait for operation
@@ -90,7 +90,9 @@ InsertPilar PROC USES eax ebx ecx edx esi
     .ENDIF
 
     FirstPilar:
+    mov pilars[esi].start_x, GAP_RANDOM_RANGE_START
     INVOKE Random, PILAR_RANDOM_RANGE_START, PILAR_RANDOM_RANGE_END
+    add eax, GAP_RANDOM_RANGE_START
     mov pilars[esi].end_x, eax
     mov pilars[esi].height, HEIGHT
     ret
@@ -217,11 +219,21 @@ RotatePole ENDP
 GameStart PROC
     INVOKE InitialPilar
     mov state, ST_STAND
+    mov eax, pilars[0].start_x
+    mov player_x, eax
+    mov eax, pilars[0].height
+    mov player_y, eax
+    mov player_f, 0
     mov scene, 2
     ret
 GameStart ENDP
 
 GameProc PROC uses eax
+    inc player_f
+    .IF player_f == 6
+        mov player_f, 0
+    .ENDIF
+
     .IF move_remain > 0
         INVOKE MovePilar, 5
         sub move_remain, 5
@@ -275,6 +287,7 @@ Scene2KeydownHandler PROC wParam:DWORD
     switch wParam
         case VK_RETURN
             mov eax, pilars[TYPE pilars].start_x
+            sub eax, GAP_RANDOM_RANGE_START
             mov move_remain, eax
             return 0
     endsw
