@@ -30,6 +30,7 @@ EXTERNDEF selected_menu:DWORD ;0:Start, 1:Help, 2:Exit
 EXTERNDEF pilars:Pilar, ;Array of pilars
           player_x:DWORD, ;Player position x-coor
           player_y:DWORD, ;Player position y-coor
+          player_f:DWORD, ;Player frame number
           pole_x0:DWORD, ;Pole left x-coor
           pole_y0:DWORD, ;Pole left y-coor
           pole_x1:DWORD, ;Pole right x-coor

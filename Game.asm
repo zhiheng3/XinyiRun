@@ -261,7 +261,7 @@ Scene0KeydownHandler PROC wParam:DWORD
     return 0
 Scene0KeydownHandler ENDP
 
-Scene1KeydownHandler PROC
+Scene1KeydownHandler PROC wParam:DWORD
 Scene1KeydownHandler ENDP
 
 KeydownProc PROC wParam:DWORD
