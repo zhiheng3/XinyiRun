@@ -28,11 +28,13 @@ helpTitle db "Help"
 exitTitle db "Exit"
 .code
 DrawProc PROC hDC:DWORD
+
     .IF scene == 0
         invoke DrawStartMenu,hDC
     .ELSEIF scene == 1
         invoke DrawHelpWin,hDC
     .ELSEIF scene == 2
+
         invoke DrawGamePlayWin,hDC
     .ELSEIF scene == 3
         invoke DrawGameOverWin,hDC
@@ -65,12 +67,12 @@ DrawStartMenu PROC hDC:DWORD
 DrawStartMenu ENDP
 
 DrawHelpWin PROC hDC:DWORD
-
+    invoke DrawBackground,hDC,300
     ret
 DrawHelpWin ENDP  
 
 DrawGamePlayWin PROC hDC:DWORD
-
+    invoke DrawBackground,hDC,300
     ret
 DrawGamePlayWin ENDP
 
