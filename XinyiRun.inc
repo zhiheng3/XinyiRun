@@ -38,39 +38,7 @@
         MsgboxI          PROTO :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
 
         DrawProc         PROTO hDC:DWORD
+        InitGame         PROTO
         GameProc         PROTO
         KeydownProc      PROTO wParam:DWORD
         KeyupProc        PROTO wParam:DWORD
-
-; ÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-÷-
-
-  ; -----------------------------
-  ; uninitialised data allocation
-  ; -----------------------------
-    .data?
-        hInstance   dd ?
-        hWnd        dd ?
-        hIcon       dd ?
-        hCursor     dd ?
-        CommandLine dd ?
-        sWid        dd ?
-        sHgt        dd ?
-        hTimer DWORD ?
-
-IF 0  ; ¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
-
-    insert additional code files within the .CODE section
-
-ENDIF ; ¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
-
-
-
-; ¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
-
-  ; ---------------------------
-  ; initialised data allocation
-  ; ---------------------------
-    .data
-
-
-    
