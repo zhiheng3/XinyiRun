@@ -236,4 +236,5 @@ DrawNumber PROC hDC:DWORD,num:DWORD,num_posX:DWORD,num_posY:DWORD,num_width:DWOR
 
     popa
     ret
+DrawNumber ENDP  
 END
