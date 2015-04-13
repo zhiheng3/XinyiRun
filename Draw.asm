@@ -7,6 +7,19 @@
 include XinyiRun.inc         ; local includes for this file
 include Vars.inc
 
+DrawStartMenu    PROTO hDC:DWORD
+DrawHelpWin      PROTO hDC:DWORD
+DrawGamePlayWin  PROTO hDC:DWORD
+DrawGameOverWin  PROTO hDC:DWORD
+DrawErrorWin     PROTO hDC:DWORD
+DrawBackground   PROTO hDC:DWORD,ID:DWORD
+DrawPictureNormal      PROTO hDC:DWORD,ID:DWORD,posX:DWORD,posY:DWORD,wid:DWORD,hei:DWORD
+DrawPictureTransparent PROTO hDC:DWORD,ID:DWORD,posX:DWORD,posY:DWORD,wid:DWORD,hei:DWORD,color:DWORD
+DrawTextF              PROTO hDC:DWORD,font_wid:DWORD,font_hei:DWORD,bold:DWORD,text_color:DWORD,text_posX:DWORD,text_posY:DWORD,text_addr:DWORD,text_size:DWORD
+DrawALine              PROTO hDC:DWORD,posX1:DWORD,posY1:DWORD,posX2:DWORD,posY2:DWORD,line_style:DWORD,line_width:DWORD,line_color:DWORD
+DrawAShape             PROTO hDC:DWORD,shape:DWORD,posX:DWORD,posY:DWORD,rect_width:DWORD,rect_height:DWORD,rect_color:DWORD,edge_color:DWORD,round_width:DWORD,round_height:DWORD
+        
+
 .data
 FontName db "roman",0
 gameTitle db "Welcome to XinyiRun!"
@@ -30,18 +43,24 @@ DrawProc PROC hDC:DWORD
 DrawProc ENDP
 
 DrawStartMenu PROC hDC:DWORD
-    invoke DrawBackground,hDC
+    invoke DrawBackground,hDC,100
     .IF selected_menu == 0
-        invoke DrawPictureTransparent,hDC,200,190,170,50,50,0ffffffh
-    .ELSEIF selected_menu == 1
-        invoke DrawPictureTransparent,hDC,200,190,230,50,50,0ffffffh
-    .ELSEIF selected_menu == 2
-        invoke DrawPictureTransparent,hDC,200,190,290,50,50,0ffffffh
+        invoke DrawPictureTransparent,hDC,400,190,170,50,50,0ff0000h
+    ;     invoke DrawPictureTransparent,hDC,600,190,170,50,50,0ffffffh
+    ;     invoke DrawPictureTransparent,hDC,800,190,170,50,50,0ffffffh
+    ; .ELSEIF selected_menu == 1
+    ;     invoke DrawPictureTransparent,hDC,400,190,170,50,50,0ffffffh
+    ;     invoke DrawPictureTransparent,hDC,600,190,170,50,50,0ffffffh
+    ;     invoke DrawPictureTransparent,hDC,800,190,170,50,50,0ffffffh
+    ; .ELSEIF selected_menu == 2
+    ;     invoke DrawPictureTransparent,hDC,400,190,170,50,50,0ffffffh
+    ;     invoke DrawPictureTransparent,hDC,600,190,170,50,50,0ffffffh
+    ;     invoke DrawPictureTransparent,hDC,800,190,170,50,50,0ffffffh
     .ENDIF
-    invoke DrawTextF,hDC,50,26,700,00000ffh,50,50,ADDR gameTitle,SIZEOF gameTitle
-    invoke DrawTextF,hDC,30,19,700,000ffffh,250,180,ADDR startTitle,SIZEOF startTitle
-    invoke DrawTextF,hDC,30,19,700,000ffffh,250,240,ADDR helpTitle,SIZEOF helpTitle
-    invoke DrawTextF,hDC,30,19,700,000ffffh,250,300,ADDR exitTitle,SIZEOF exitTitle
+    ; invoke DrawTextF,hDC,50,26,700,00000ffh,50,50,ADDR gameTitle,SIZEOF gameTitle
+    ; invoke DrawTextF,hDC,30,19,700,000ffffh,250,180,ADDR startTitle,SIZEOF startTitle
+    ; invoke DrawTextF,hDC,30,19,700,000ffffh,250,240,ADDR helpTitle,SIZEOF helpTitle
+    ; invoke DrawTextF,hDC,30,19,700,000ffffh,250,300,ADDR exitTitle,SIZEOF exitTitle
     ret
 DrawStartMenu ENDP
 
@@ -65,10 +84,10 @@ DrawErrorWin PROC hDC:DWORD
     ret
 DrawErrorWin ENDP
 
-DrawBackground PROC hDC:DWORD
+DrawBackground PROC hDC:DWORD,ID:DWORD
     LOCAL rect:RECT
     invoke GetClientRect,hWnd,addr rect
-    invoke DrawPictureNormal,hDC,100,0,0,rect.right,rect.bottom
+    invoke DrawPictureNormal,hDC,ID,0,0,rect.right,rect.bottom
     ret
 DrawBackground ENDP
 
