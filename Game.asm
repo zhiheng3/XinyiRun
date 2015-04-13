@@ -10,7 +10,7 @@ include XinyiRun.inc         ; local includes for this file
 include Vars.inc
 
 ;macro vars
-HEIGHT = 60
+HEIGHT = 100
 PILAR_RANDOM_RANGE_START = 20
 PILAR_RANDOM_RANGE_END = 100
 GAP_RANDOM_RANGE_START = 20
