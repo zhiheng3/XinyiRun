@@ -148,9 +148,9 @@ Main proc
   ; set width and height as percentages of screen
   ; ---------------------------------------------
   ;  invoke GetPercent,sWid,70
-    mov Wwd, 640
+    mov Wwd, 646
   ;  invoke GetPercent,sHgt,70
-    mov Wht, 480
+    mov Wht, 509
 
   ; ----------------------
   ; set aspect ratio limit

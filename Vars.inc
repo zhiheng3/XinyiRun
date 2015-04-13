@@ -34,8 +34,9 @@ EXTERNDEF pilars:Pilar, ;Array of pilars
           pole_x0:DWORD, ;Pole left x-coor
           pole_y0:DWORD, ;Pole left y-coor
           pole_x1:DWORD, ;Pole right x-coor
-          pole_y1:DWORD, ;Pole right y-coor
-          life:DWORD, ;Remain lives
+          pole_y1:DWORD ;Pole right y-coor
+          
+EXTERNDEF life:DWORD, ;Remain lives
           score:DWORD, ;Current score
           total_bonus:DWORD, ;Current bonus(Could be accumulated)
           add_bonus:DWORD ;Latest bonus
