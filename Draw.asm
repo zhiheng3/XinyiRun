@@ -15,10 +15,12 @@ DrawErrorWin     PROTO hDC:DWORD
 DrawBackground   PROTO hDC:DWORD,ID:DWORD
 DrawPilars       PROTO hDC:DWORD
 DrawPictureNormal      PROTO hDC:DWORD,ID:DWORD,posX:DWORD,posY:DWORD,wid:DWORD,hei:DWORD
-DrawPictureTransparent PROTO hDC:DWORD,ID:DWORD,posX:DWORD,posY:DWORD,wid:DWORD,hei:DWORD,color:DWORD
+DrawPictureTransparent PROTO hDC:DWORD,ID:DWORD,posXD:DWORD,posYD:DWORD,posXS:DWORD,posYS:DWORD,wid:DWORD,hei:DWORD,color:DWORD
 DrawTextF              PROTO hDC:DWORD,font_wid:DWORD,font_hei:DWORD,bold:DWORD,text_color:DWORD,text_posX:DWORD,text_posY:DWORD,text_addr:DWORD,text_size:DWORD
 DrawALine              PROTO hDC:DWORD,posX1:DWORD,posY1:DWORD,posX2:DWORD,posY2:DWORD,line_style:DWORD,line_width:DWORD,line_color:DWORD
 DrawAShape             PROTO hDC:DWORD,shape:DWORD,posX:DWORD,posY:DWORD,rect_width:DWORD,rect_height:DWORD,rect_color:DWORD,edge_color:DWORD,round_width:DWORD,round_height:DWORD
+DrawPlayer             PROTO hDC:DWORD
+DrawNumber             PROTO hDC:DWORD,num:DWORD,num_posX:DWORD,num_posY:DWORD,num_width:DWORD,num_height:DWORD
 
 .data
 FontName db "roman",0
@@ -44,17 +46,17 @@ DrawProc ENDP
 DrawStartMenu PROC hDC:DWORD
     invoke DrawBackground,hDC,100
     .IF selected_menu == 0
-        invoke DrawPictureTransparent,hDC,111,250,150,120,60,0ffffffh
-        invoke DrawPictureTransparent,hDC,120,250,220,120,60,0ffffffh
-        invoke DrawPictureTransparent,hDC,130,250,290,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,111,250,150,0,0,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,120,250,220,0,0,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,130,250,290,0,0,120,60,0ffffffh
     .ELSEIF selected_menu == 1
-        invoke DrawPictureTransparent,hDC,110,250,150,120,60,0ffffffh
-        invoke DrawPictureTransparent,hDC,121,250,220,120,60,0ffffffh
-        invoke DrawPictureTransparent,hDC,130,250,290,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,110,250,150,0,0,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,121,250,220,0,0,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,130,250,290,0,0,120,60,0ffffffh
     .ELSEIF selected_menu == 2
-        invoke DrawPictureTransparent,hDC,110,250,150,120,60,0ffffffh
-        invoke DrawPictureTransparent,hDC,120,250,220,120,60,0ffffffh
-        invoke DrawPictureTransparent,hDC,131,250,290,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,110,250,150,0,0,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,120,250,220,0,0,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,131,250,290,0,0,120,60,0ffffffh
     .ENDIF
     ret
 DrawStartMenu ENDP
@@ -147,7 +149,7 @@ DrawPictureNormal PROC hDC:DWORD,ID:DWORD,posX:DWORD,posY:DWORD,wid:DWORD,hei:DW
     ret
 DrawPictureNormal ENDP
 
-DrawPictureTransparent PROC hDC:DWORD,ID:DWORD,posX:DWORD,posY:DWORD,wid:DWORD,hei:DWORD,color:DWORD
+DrawPictureTransparent PROC hDC:DWORD,ID:DWORD,posXD:DWORD,posYD:DWORD,posXS:DWORD,posYS:DWORD,wid:DWORD,hei:DWORD,color:DWORD
     LOCAL hBmpsource:DWORD
     LOCAL hDCback:DWORD
     pusha
@@ -156,7 +158,7 @@ DrawPictureTransparent PROC hDC:DWORD,ID:DWORD,posX:DWORD,posY:DWORD,wid:DWORD,h
     invoke LoadImage,hInstance,ID,IMAGE_BITMAP,0,0,LR_LOADTRANSPARENT or LR_LOADMAP3DCOLORS
     mov hBmpsource,eax
     invoke SelectObject,hDCback,hBmpsource
-    invoke TransparentBlt,hDC,posX,posY,wid,hei,hDCback,0,0,wid,hei,color
+    invoke TransparentBlt,hDC,posXD,posYD,wid,hei,hDCback,posXS,posYS,wid,hei,color
     invoke DeleteObject,hBmpsource
     invoke DeleteDC,hDCback
     popa
@@ -222,4 +224,16 @@ DrawAShape PROC hDC:DWORD,shape:DWORD,posX1:DWORD,posY1:DWORD,posX2:DWORD,posY2:
     ret
 DrawAShape ENDP
 
+DrawPlayer PROC hDC:DWORD
+    pusha
+
+    popa
+    ret
+DrawPlayer ENDP
+
+DrawNumber PROC hDC:DWORD,num:DWORD,num_posX:DWORD,num_posY:DWORD,num_width:DWORD,num_height:DWORD
+    pusha
+
+    popa
+    ret
 END
