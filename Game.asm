@@ -28,6 +28,8 @@ ST_DEAD = 6    ;Person dead
 state DWORD ?
 history_scene DWORD ?
 
+move_remain SDWORD -1
+
 .code
 ;Initializaiton
 InitGame PROC
@@ -216,31 +218,10 @@ GameStart PROC
 GameStart ENDP
 
 GameProc PROC uses eax
-    .IF (deltaX != 0) || (deltaY != 0)
-        inc frames
+    .IF move_remain > 0
+        INVOKE MovePilar
+        dec move_remain
     .ENDIF
-
-    mov eax, 100
-    mul speed
-    .IF (eax < frames)
-        inc speed
-    .ENDIF
-
-    mov eax, ellipse.x
-    add eax, deltaX
-    .IF (eax < 0) || (eax > 560)
-        INVOKE InitGame
-        return 0
-    .ENDIF
-    mov ellipse.x, eax
-
-    mov eax, ellipse.y
-    add eax, deltaY
-    .IF (eax < 0) || (eax > 400)
-        INVOKE InitGame
-        return 0
-    .ENDIF
-    mov ellipse.y, eax
     ret
 GameProc ENDP
 
@@ -282,6 +263,16 @@ Scene1KeydownHandler PROC wParam:DWORD
     return 0
 Scene1KeydownHandler ENDP
 
+Scene2KeydownHandler PROC wParam:DWORD
+    switch wParam
+        case VK_RETURN
+            mov eax, pilars[TYPE pilars]
+            mov move_remain, eax
+            return 0
+    endsw
+    return 0
+Scene2KeydownHandler ENDP
+
 KeydownProc PROC wParam:DWORD
     switch scene
         case 0
@@ -289,6 +280,9 @@ KeydownProc PROC wParam:DWORD
             ret
         case 1
             INVOKE Scene1KeydownHandler, wParam
+            ret
+        case 2
+            INVOKE Scene2KeydownHandler, wParam
             ret
     endsw
     return 0
