@@ -16,9 +16,17 @@ PILAR_RANDOM_RANGE_END = 100
 GAP_RANDOM_RANGE_START = 20
 GAP_RANDOM_RANGE_END = 200
 
-.data
-;Random vars defination
-;random_seed DWORD ?
+ST_STAND = 0   ;Wait for operation
+ST_HOLD = 1    ;Pressing space
+ST_ROTATE = 2  ;Rotate pole
+ST_RUN = 3     ;Running
+ST_BONUS = 4   ;Add bonus
+ST_MOVE = 5    ;Move pilars
+ST_DEAD = 6    ;Person dead
+
+.data?
+state DWORD ?
+history_scene DWORD ?
 
 .code
 ;Initializaiton
@@ -33,11 +41,6 @@ InitGame PROC
 
     ret
 InitGame ENDP
-
-GameStart PROC
-    mov scene, 2
-    ret
-GameStart ENDP
 
 ;Get random number between first and second parameter
 ;The result is in eax
@@ -205,6 +208,13 @@ RotatePole PROC USES eax ecx,
     ret
 RotatePole ENDP
 
+GameStart PROC
+    INVOKE InitialPilar
+    mov state, ST_STAND
+    mov scene, 2
+    ret
+GameStart ENDP
+
 GameProc PROC uses eax
     .IF (deltaX != 0) || (deltaY != 0)
         inc frames
@@ -251,6 +261,7 @@ Scene0KeydownHandler PROC wParam:DWORD
                 INVOKE GameStart
                 return 0
             .ELSEIF selected_menu == 1
+                mov history_scene, 0
                 mov scene, 1
                 mov selected_menu, 0
                 return 0
@@ -262,6 +273,13 @@ Scene0KeydownHandler PROC wParam:DWORD
 Scene0KeydownHandler ENDP
 
 Scene1KeydownHandler PROC wParam:DWORD
+    switch wParam
+        case VK_ESCAPE
+            mov eax, history_scene
+            mov scene, eax
+            return 0
+    endsw
+    return 0
 Scene1KeydownHandler ENDP
 
 KeydownProc PROC wParam:DWORD
