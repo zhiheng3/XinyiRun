@@ -271,6 +271,7 @@ DrawNumber ENDP
 ParseNumber PROC num:DWORD
     pusha
     xor ebx,ebx
+    mov esi,OFFSET score_array_norder
     xor edx,edx
     xor eax,eax
     mov eax,num   
@@ -279,6 +280,7 @@ p1:
     mov [esi],edx
     add esi,TYPE score_array_norder
     add ebx,1
+    .IF eax==0
         jmp pout
     .ENDIF
     xor edx,edx
@@ -291,6 +293,8 @@ ParseNumber ENDP
 
 PutNumInOrder PROC
     pusha
+    mov edi,OFFSET score_array_norder
+    mov esi,OFFSET score_array_order
     push eax
     mov eax,score_num
     imul eax,TYPE score_array_norder
