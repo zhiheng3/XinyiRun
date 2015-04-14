@@ -30,11 +30,11 @@ FontName db "roman",0
 basePosY DWORD 380
 pilarPosY1 DWORD 280
 baseHeight DWORD 20
-playerHeightS DWORD 50
-playerWidthS DWORD 62
-playerHeightD DWORD 50
-playerWidthD DWORD 62
-freq DWORD 6
+playerHeightS DWORD 57
+playerWidthS DWORD 70
+playerHeightD DWORD 40
+playerWidthD DWORD 49
+freq DWORD 7
 score_array_norder DWORD 10 DUP(?)
 score_array_order DWORD 10 DUP(?)
 score_num DWORD 0
@@ -42,7 +42,7 @@ deci DWORD 10
 numS_width DWORD 118
 numS_height DWORD 236
 numberoffset DWORD 80
-playeroffset DWORD 12
+
 .code
 DrawProc PROC hDC:DWORD
     .IF scene == 0
@@ -261,12 +261,12 @@ DrawPlayer PROC hDC:DWORD
     LOCAl picStartX:DWORD
     pusha
     mov eax,player_x
-    sub eax,playeroffset
     mov posX,eax
 
     mov ebx,basePosY
     sub ebx,player_y
     sub ebx,playerHeightD
+
 
     mov posY,ebx
 
@@ -276,11 +276,15 @@ DrawPlayer PROC hDC:DWORD
 
     div freq
     ;mov frequency,edx
-
-    imul edx,playerWidthS
-    mov picStartX,edx
-    
-    invoke DrawPictureTransparent,hDC,301,posX,posY,picStartX,0,playerWidthD,playerHeightD,playerWidthS,playerHeightS,0ffffffh
+    .IF edx==0
+        invoke DrawPictureTransparent,hDC,362,posX,posY,0,0,17,playerHeightD,21,57,0ffffffh
+    .ELSE
+        sub edx,1
+        imul edx,playerWidthS
+        mov picStartX,edx
+        invoke DrawPictureTransparent,hDC,361,posX,posY,picStartX,0,playerWidthD,playerHeightD,playerWidthS,playerHeightS,0ffffffh
+    .ENDIF
+ 
     popa
     ret
 DrawPlayer ENDP

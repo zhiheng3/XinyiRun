@@ -412,6 +412,10 @@ CalcResult PROC USES eax ebx esi;Calculate the result of move
         mov finalX, ebx
     .ELSEIF isDown == 1
         sub finalX, 30
+        mov ebx, pilars[0].end_x
+        .IF finalX < ebx
+            mov finalX, ebx
+        .ENDIF
     .ENDIF
 
     ;Calculate bonus
@@ -502,7 +506,7 @@ GameProc PROC uses eax ebx
             .IF total_frames & 1
                 inc player_f
             .ENDIF
-            .IF player_f == 6
+            .IF player_f == 7
                 mov player_f, 0
             .ENDIF 
             add player_x, 4
@@ -520,6 +524,7 @@ GameProc PROC uses eax ebx
                     mov pole_y1, 0
                     mov state, ST_MOVE
                 .ELSE
+                    mov player_f, 2
                     mov state, ST_DEAD
                 .ENDIF
             .ENDIF
