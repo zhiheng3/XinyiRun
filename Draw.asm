@@ -24,7 +24,6 @@ DrawNumber             PROTO hDC:DWORD,num:DWORD,num_posX:DWORD,num_posY:DWORD,n
 
 .data
 FontName db "roman",0
-
 basePoxY DWORD 380
 pilarPosY1 DWORD 280
 baseHeight DWORD 20
@@ -261,5 +260,51 @@ DrawPlayer PROC hDC:DWORD
     ret
 DrawPlayer ENDP
 
+DrawNumber PROC hDC:DWORD,num:DWORD,num_posX:DWORD,num_posY:DWORD,num_width:DWORD,num_height:DWORD
+    pusha
 
+
+    popa
+    ret
+DrawNumber ENDP 
+
+ParseNumber PROC num:DWORD
+    pusha
+    xor ebx,ebx
+    xor edx,edx
+    xor eax,eax
+    mov eax,num   
+p1:
+    div deci
+    mov [esi],edx
+    add esi,TYPE score_array_norder
+    add ebx,1
+        jmp pout
+    .ENDIF
+    xor edx,edx
+    jmp p1 
+pout:       
+    mov score_num,ebx
+    popa
+    ret
+ParseNumber ENDP 
+
+PutNumInOrder PROC
+    pusha
+    push eax
+    mov eax,score_num
+    imul eax,TYPE score_array_norder
+    sub eax,TYPE score_array_norder
+    add edi,eax
+    pop eax
+    mov ecx,score_num
+put1:
+    mov ebx,[edi]
+    mov [esi],ebx
+    add esi,TYPE score_array_order
+    sub edi,TYPE score_array_norder
+    Loop put1    
+    popa
+    ret
+PutNumInOrder ENDP
 END
