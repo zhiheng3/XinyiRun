@@ -15,6 +15,7 @@ DrawErrorWin     PROTO hDC:DWORD
 DrawBackground   PROTO hDC:DWORD,ID:DWORD
 DrawPilars       PROTO hDC:DWORD
 DrawPlayer       PROTO hDC:DWORD
+DrawPole         PROTO hDC:DWORD
 DrawPictureNormal      PROTO hDC:DWORD,ID:DWORD,posX:DWORD,posY:DWORD,wid:DWORD,hei:DWORD
 DrawPictureTransparent PROTO hDC:DWORD,ID:DWORD,posXD:DWORD,posYD:DWORD,posXS:DWORD,posYS:DWORD,widD:DWORD,heiD:DWORD,widS:DWORD,heiS:DWORD,color:DWORD
 DrawTextF              PROTO hDC:DWORD,font_wid:DWORD,font_hei:DWORD,bold:DWORD,text_color:DWORD,text_posX:DWORD,text_posY:DWORD,text_addr:DWORD,text_size:DWORD
@@ -29,8 +30,10 @@ FontName db "roman",0
 basePoxY DWORD 380
 pilarPosY1 DWORD 280
 baseHeight DWORD 20
-playerHeight DWORD 50
-playerWidth DWORD 62
+playerHeightS DWORD 50
+playerWidthS DWORD 62
+playerHeightD DWORD 50
+playerWidthD DWORD 62
 freq DWORD 6
 score_array_norder DWORD 10 DUP(?)
 score_array_order DWORD 10 DUP(?)
@@ -72,6 +75,8 @@ DrawStartMenu PROC hDC:DWORD
     ; ;invoke DrawANumber,hDC,4,40,40,40,80
     ; invoke DrawNumberArray,hDC,4567,40,40,40,80,0ffffffh
     ; invoke DrawNumberArray,hDC,86786,100,100,20,40,0ffffffh
+    ; invoke DrawALine,hDC,10,10,100,100,PS_SOLID,2,0000000h
+    ; invoke DrawALine,hDC,200,10,200,100,PS_DOT,1,0000000h
     ret
 DrawStartMenu ENDP
 
@@ -91,6 +96,8 @@ DrawGamePlayWin PROC hDC:DWORD
     pop eax
     invoke DrawPilars,hDC
     invoke DrawPlayer,hDC
+    invoke DrawPole,hDC
+    invoke DrawNumberArray,hDC,4567,335,6,25,50,0ffffffh
     ret
 DrawGamePlayWin ENDP
 
@@ -117,6 +124,20 @@ DrawP:
     popa
     ret
 DrawPilars ENDP
+
+DrawPole PROC hDC:DWORD
+    LOCAL rect:RECT
+    pusha
+    invoke GetClientRect,hWnd,addr rect 
+    mov eax,rect.bottom
+    sub eax,pole_y0
+
+    mov ebx,rect.bottom
+    sub ebx,pole_y1
+    invoke DrawALine,hDC,pole_x0,eax,pole_x1,ebx,PS_SOLID,2,0000000h
+    popa
+    ret
+DrawPole ENDP
 
 DrawBackground PROC hDC:DWORD,ID:DWORD
     LOCAL rect:RECT
@@ -249,7 +270,7 @@ DrawPlayer PROC hDC:DWORD
     mov posX,eax
 
     mov ebx,pilarPosY1
-    sub ebx,playerHeight
+    sub ebx,playerHeightD
 
     mov posY,ebx
 
@@ -260,9 +281,9 @@ DrawPlayer PROC hDC:DWORD
     div freq
     ;mov frequency,edx
 
-    imul edx,playerWidth
+    imul edx,playerWidthD
     mov picStartX,edx
-    invoke DrawPictureTransparent,hDC,301,posX,posY,picStartX,0,playerWidth,playerHeight,playerWidth,playerHeight,0ffffffh
+    invoke DrawPictureTransparent,hDC,301,posX,posY,picStartX,0,playerWidthD,playerHeightD,playerWidthS,playerHeightS,0ffffffh
     popa
     ret
 DrawPlayer ENDP
@@ -279,6 +300,7 @@ DrawNumL:
     mov ebx,[esi]
     invoke DrawANumber,hDC,ebx,eax,start_posY,numD_width,numD_height,color
     add eax,numD_width
+    add eax,5
     add esi,TYPE score_array_order
     Loop DrawNumL    
     popa
