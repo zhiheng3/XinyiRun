@@ -525,9 +525,10 @@ GameProc PROC uses eax ebx
                     mov pole_y0, 0
                     mov pole_x1, 0
                     mov pole_y1, 0
+                    mov player_f, 0
                     mov state, ST_MOVE
                 .ELSE
-                    mov player_f, 2
+                    mov player_f, 3
                     mov state, ST_DEAD
                 .ENDIF
             .ENDIF
@@ -567,6 +568,11 @@ GameProc PROC uses eax ebx
             ;Player
             sub player_y, 4
             .IF player_y == 0
+                dec life
+                .IF life == 0
+                    mov scene, 3
+                    ret
+                .ENDIF
                 INVOKE GameSet
                 mov state, ST_STAND
             .ENDIF
