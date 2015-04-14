@@ -8,16 +8,16 @@
 
 500 ICON MOVEABLE PURE LOADONCALL DISCARDABLE "XinyiRun.ico"
 
-10 BITMAP DISCARDABLE "./image/0.bmp"
-11 BITMAP DISCARDABLE "./image/1.bmp"
-12 BITMAP DISCARDABLE "./image/2.bmp"
-13 BITMAP DISCARDABLE "./image/3.bmp"
-14 BITMAP DISCARDABLE "./image/4.bmp"
-15 BITMAP DISCARDABLE "./image/5.bmp"
-16 BITMAP DISCARDABLE "./image/6.bmp"
-17 BITMAP DISCARDABLE "./image/7.bmp"
-18 BITMAP DISCARDABLE "./image/8.bmp"
-19 BITMAP DISCARDABLE "./image/9.bmp"
+10 BITMAP DISCARDABLE "./image/number/0.bmp"
+11 BITMAP DISCARDABLE "./image/number/1.bmp"
+12 BITMAP DISCARDABLE "./image/number/2.bmp"
+13 BITMAP DISCARDABLE "./image/number/3.bmp"
+14 BITMAP DISCARDABLE "./image/number/4.bmp"
+15 BITMAP DISCARDABLE "./image/number/5.bmp"
+16 BITMAP DISCARDABLE "./image/number/6.bmp"
+17 BITMAP DISCARDABLE "./image/number/7.bmp"
+18 BITMAP DISCARDABLE "./image/number/8.bmp"
+19 BITMAP DISCARDABLE "./image/number/9.bmp"
 
 100 BITMAP DISCARDABLE "./image/XinyiRun_menu_backgroud.bmp"
 110 BITMAP DISCARDABLE "./image/start_button_unclick.bmp"
@@ -29,6 +29,13 @@
 
 300 BITMAP DISCARDABLE "./image/XinyiRun_scene.bmp"
 301 BITMAP DISCARDABLE "./image/player_walk.bmp"
+
+310 BITMAP DISCARDABLE "./image/button/bridge.bmp"
+311 BITMAP DISCARDABLE "./image/button/bridge_used.bmp"
+320 BITMAP DISCARDABLE "./image/button/life.bmp"
+//330 BITMAP DISCARDABLE "./image/button/music_pause.bmp"
+
+
 VS_VERSION_INFO VERSIONINFO
 FILEVERSION 1, 0, 0, 0
 PRODUCTVERSION 1, 0, 0, 0

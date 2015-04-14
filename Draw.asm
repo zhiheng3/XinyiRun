@@ -42,6 +42,7 @@ deci DWORD 10
 numS_width DWORD 118
 numS_height DWORD 236
 numberoffset DWORD 80
+playeroffset DWORD 12
 .code
 DrawProc PROC hDC:DWORD
     .IF scene == 0
@@ -260,9 +261,11 @@ DrawPlayer PROC hDC:DWORD
     LOCAl picStartX:DWORD
     pusha
     mov eax,player_x
+    sub eax,playeroffset
     mov posX,eax
 
-    mov ebx,pilarPosY1
+    mov ebx,basePosY
+    sub ebx,player_y
     sub ebx,playerHeightD
 
     mov posY,ebx
@@ -276,6 +279,7 @@ DrawPlayer PROC hDC:DWORD
 
     imul edx,playerWidthS
     mov picStartX,edx
+    
     invoke DrawPictureTransparent,hDC,301,posX,posY,picStartX,0,playerWidthD,playerHeightD,playerWidthS,playerHeightS,0ffffffh
     popa
     ret
