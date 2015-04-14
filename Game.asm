@@ -15,6 +15,20 @@ PILAR_RANDOM_RANGE_START = 20
 PILAR_RANDOM_RANGE_END = 100
 GAP_RANDOM_RANGE_START = 50
 GAP_RANDOM_RANGE_END = 200
+POLE_INIT = 10
+
+BONUS_RANGE0 = 1
+BONUS_SCORE0 = 20
+BONUS_RANGE1 = 5
+BONUS_SCORE1 = 10
+BONUS_RANGE2 = 15
+BONUS_SCORE2 = 5
+BONUS_RANGE3 = 35
+BONUS_SCORE3 = 1
+
+COST_Z = 5
+COST_X = 10
+COST_C = 20
 
 ST_STAND = 0   ;Wait for operation
 ST_HOLD = 1    ;Pressing space
@@ -56,8 +70,14 @@ flagX DWORD 0
 high_score DWORD 0
 
 
-;Tools
+;Animations
 widen_remain SDWORD 0
+
+;Temps
+poleLen  DWORD 0
+isDead   DWORD 0
+bonus    DWORD 0
+finalX   DWORD 0
 
 
 .code
@@ -185,7 +205,7 @@ DeletePilar PROC USES eax ebx ecx esi
     add esi, structSize
     add ebx, structSize
     loop L1
-
+    ret
 DeletePilar ENDP
 
 ;Move all pilars left, decrease the x-coor by 1
@@ -256,15 +276,97 @@ RotatePole PROC USES eax ecx,
     ret
 RotatePole ENDP
 
+ExtendPole PROC USES ebx, Step:DWORD
+    mov ebx, Step
+    add poleLen, ebx
+    .IF flagX == 0
+        add pole_y1, ebx
+    .ELSE
+        add pole_x1, ebx
+    .ENDIF
+    ret
+ExtendPole ENDP
+
+CalcResult PROC USES eax ebx esi;Calculate the result of move
+    LOCAL structSize: DWORD, dis:DWORD
+
+    mov structSize, TYPE pilars
+    mov esi, 0
+    mov eax, pilars[esi].end_x
+    add eax, poleLen
+    mov finalX, eax
+
+    add esi, structSize
+    mov bonus, 0
+    mov isDead, 0
+    mov dis, 10000
+    mov ebx, pilars[esi].start_x
+    .IF finalX < ebx
+        mov isDead, 1
+    .ELSE
+        mov ebx, finalX
+        sub ebx, pilars[esi].start_x
+        .IF ebx < dis
+            mov dis, ebx
+        .ENDIF
+    .ENDIF
+
+    mov ebx, pilars[esi].end_x
+    .IF finalX > ebx
+        mov isDead, 1
+    .ELSE
+        mov ebx, pilars[esi].end_x
+        sub ebx, finalX
+        .IF ebx < dis
+            mov dis, ebx
+        .ENDIF
+    .ENDIF
+
+    ;Calculate bonus
+    .IF isDead == 0
+        .IF dis <= BONUS_RANGE3
+            mov bonus, BONUS_SCORE3
+        .ENDIF
+        .IF dis <= BONUS_RANGE2
+            mov bonus, BONUS_SCORE2
+        .ENDIF
+        .IF dis <= BONUS_RANGE1
+            mov bonus, BONUS_SCORE1
+        .ENDIF
+        .IF dis <= BONUS_RANGE0
+            mov bonus, BONUS_SCORE0
+        .ENDIF
+    .ENDIF
+    
+    ret
+CalcResult ENDP
+
+;Set the player's and pole's position
+GameSet PROC USES ebx
+    ;Player
+    mov ebx, pilars[0].start_x
+    mov player_x, ebx
+    mov ebx, pilars[0].height
+    mov player_y, ebx
+    mov player_f, 0
+
+    ;Pole
+    mov ebx, pilars[0].end_x
+    mov pole_x0, ebx
+    mov pole_x1, ebx
+    mov ebx, pilars[0].height
+    mov pole_y0, ebx
+    add ebx, POLE_INIT
+    mov pole_y1, ebx
+    mov poleLen, ebx
+    ret
+GameSet ENDP
+
 GameStart PROC
     INVOKE InitialPilar
     mov total_frames, 0
     mov state, ST_STAND
-    mov eax, pilars[0].start_x
-    mov player_x, eax
-    mov eax, pilars[0].height
-    mov player_y, eax
-    mov player_f, 0
+    INVOKE GameSet
     mov scene, 2
     ret
 GameStart ENDP
@@ -287,6 +389,10 @@ GameProc PROC uses eax
         INVOKE DeletePilar
         INVOKE InitialPilar
         mov move_remain, -100
+    .ENDIF
+
+    .IF state == ST_HOLD
+        INVOKE ExtendPole, 1
     .ENDIF
 
     .IF widen_remain > 0
@@ -368,7 +474,7 @@ Scene2KeydownHandler PROC wParam:DWORD
         case VK_C ;Tool C
             return 0
         case VK_SPACE ;Play
-            mov state, ST_RUN
+            mov state, ST_HOLD
             return 0
     endsw
     return 0
@@ -377,7 +483,11 @@ Scene2KeydownHandler ENDP
 Scene2KeyupHandler PROC wParam:DWORD
     switch wParam
         case VK_SPACE
-            mov state, ST_STAND
+            .IF state != ST_HOLD
+                return 0
+            .ENDIF
+            INVOKE CalcResult
+            mov state, ST_ROTATE
             return 0
     endsw
     return 0
