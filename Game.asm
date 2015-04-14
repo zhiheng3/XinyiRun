@@ -55,8 +55,6 @@ cos_value DWORD 10000,9998,9993,9986,9975,9961,9945,9925,9902,9876,9848,
                       8571,8480,8386,8290,8191,8090,7986,7880,7771,7660,
                       7547,7431,7313,7193,7071
 
-hold_remain SDWORD -100
-move_remain SDWORD -100
 
 ;Public vars defination
 scene DWORD 0
@@ -83,7 +81,8 @@ high_score DWORD 0
 
 
 ;Animations
-widen_remain SDWORD 0
+widen_remain DWORD 0
+move_remain DWORD 0
 
 ;Temps
 poleAng  DWORD 0
@@ -433,13 +432,13 @@ GameStart PROC
     INVOKE InitialPilar
     mov total_frames, 0
     mov score, 0
-    mov state, ST_STAND
     INVOKE GameSet
+    mov state, ST_STAND
     mov scene, 2
     ret
 GameStart ENDP
 
-GameProc PROC uses eax
+GameProc PROC uses eax ebx
     inc total_frames
     switch state
         case ST_STAND
@@ -467,7 +466,14 @@ GameProc PROC uses eax
             .IF player_x >= eax
                 mov player_x, eax
                 .IF isDead == 0
-                    inc score
+                    inc score   
+                    mov eax, pilars[TYPE pilars].start_x
+                    sub eax, GAP_RANDOM_RANGE_START
+                    mov move_remain, eax
+                    mov pole_x0, 0
+                    mov pole_y0, 0
+                    mov pole_x1, 0
+                    mov pole_y1, 0
                     mov state, ST_MOVE
                 .ELSE
                     mov state, ST_DEAD
@@ -475,6 +481,21 @@ GameProc PROC uses eax
             .ENDIF
             ret
         case ST_MOVE
+            .IF move_remain >= 5
+                INVOKE MovePilar, 5
+                sub player_x, 5
+                sub move_remain, 5
+            .ELSE
+                mov ebx, move_remain
+                INVOKE MovePilar, ebx
+                sub player_x, ebx
+                mov move_remain, 0
+                INVOKE DeletePilar
+                INVOKE InsertPilar
+
+                INVOKE GameSet
+                mov state, ST_STAND
+            .ENDIF
             ret
         case ST_WIDEN
             ret
@@ -494,7 +515,7 @@ GameProc PROC uses eax
         sub move_remain, 5
     .ELSEIF move_remain != -100
         INVOKE DeletePilar
-        INVOKE InitialPilar
+        INVOKE InsertPilar
         mov move_remain, -100
     .ENDIF
 
