@@ -13,6 +13,7 @@
       include \masm32\INCLUDE\oleaut32.inc
       include \masm32\INCLUDE\msvcrt.inc
       include \masm32\INCLUDE\msimg32.inc
+      include \masm32\INCLUDE\winmm.inc
 
       include \masm32\macros\macros.asm
 
@@ -28,6 +29,7 @@
       includelib \masm32\LIB\oleaut32.lib
       includelib \masm32\LIB\msvcrt.lib
       includelib \masm32\LIB\msimg32.lib
+      includelib \masm32\LIB\winmm.lib
 
 ; いいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいい
 

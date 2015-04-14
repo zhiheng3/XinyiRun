@@ -32,10 +32,15 @@
 
 310 BITMAP DISCARDABLE "./image/button/bridge.bmp"
 311 BITMAP DISCARDABLE "./image/button/bridge_used.bmp"
-320 BITMAP DISCARDABLE "./image/button/life.bmp"
-//330 BITMAP DISCARDABLE "./image/button/music_pause.bmp"
+320 BITMAP DISCARDABLE "./image/button/info.bmp"
+321 BITMAP DISCARDABLE "./image/button/info_used.bmp"
+330 BITMAP DISCARDABLE "./image/button/life.bmp"
+340 BITMAP DISCARDABLE "./image/button/music_pause.bmp"
+341 BITMAP DISCARDABLE "./image/button/music_start.bmp"
+350 BITMAP DISCARDABLE "./image/button/stretch.bmp"
+351 BITMAP DISCARDABLE "./image/button/stretch_used.bmp"
 
-
+1000 WAVE "./music/BGM.wav"
 VS_VERSION_INFO VERSIONINFO
 FILEVERSION 1, 0, 0, 0
 PRODUCTVERSION 1, 0, 0, 0

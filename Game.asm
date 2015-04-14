@@ -574,6 +574,12 @@ Scene0KeydownHandler PROC wParam:DWORD
                 mov history_scene, 0
                 mov scene, 1
                 mov selected_menu, 0
+                push eax
+                mov eax,SND_RESOURCE
+                or eax,SND_ASYNC
+                or eax,SND_LOOP
+                invoke PlaySound,1000,hInstance,eax
+                pop eax
                 return 0
             .ELSEIF selected_menu == 2
                 return 1
@@ -587,6 +593,7 @@ Scene1KeydownHandler PROC wParam:DWORD
         case VK_ESCAPE
             mov eax, history_scene
             mov scene, eax
+            invoke PlaySound,NULL,hInstance,SND_ASYNC
             return 0
     endsw
     return 0
