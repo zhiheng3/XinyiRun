@@ -21,7 +21,7 @@ Pilar STRUCT
 Pilar ENDS
 ;Public vars
 
-EXTERNDEF scene:DWORD, random_seed:DWORD ;Scene number, 0:Start, 1:Help, 2:Game, 3:Gameover
+EXTERNDEF scene:DWORD, random_seed:DWORD, total_frames:DWORD ;Scene number, 0:Start, 1:Help, 2:Game, 3:Gameover
 
 ;Scene 0
 EXTERNDEF selected_menu:DWORD ;0:Start, 1:Help, 2:Exit

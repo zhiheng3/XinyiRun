@@ -37,6 +37,7 @@ deltaY SDWORD 0
 
 ;Public vars defination
 scene DWORD 0
+total_frames DWORD 0
 ;Scene 0
 selected_menu DWORD 0
 ;Scene 2

@@ -19,17 +19,24 @@ GAP_RANDOM_RANGE_END = 200
 ST_STAND = 0   ;Wait for operation
 ST_HOLD = 1    ;Pressing space
 ST_ROTATE = 2  ;Rotate pole
-ST_RUN = 3     ;Running
-ST_BONUS = 4   ;Add bonus
+ST_BONUS = 3   ;Add bonus
+ST_RUN = 4     ;Running
 ST_MOVE = 5    ;Move pilars
-ST_DEAD = 6    ;Person dead
+ST_WIDEN = 6    ;Widen pilar
 
 .data?
 state DWORD ?
 history_scene DWORD ?
 
 .data
+hold_remain SDWORD -100
 move_remain SDWORD -100
+
+
+;Tools
+widen_remain SDWORD 0
+flagZ BYTE 0
+flagX BYTE 0
 
 .code
 ;Initializaiton
@@ -182,6 +189,17 @@ MovePilar PROC USES ecx esi ebx, Step:DWORD
     ret
 MovePilar ENDP
 
+WidenPilar PROC USES ebx esi, Step:DWORD
+    LOCAL structSize: DWORD
+    mov structSize, TYPE pilars
+    mov ebx, Step
+    mov esi, 0
+    add esi, structSize
+    sub pilars[esi].start_x, ebx
+    add pilars[esi].end_x, ebx
+    ret
+WidenPilar ENDP
+
 ;Pole operation
 ;Rotate the pole by 1 degree. Point 0 is axis. (Use transformation matrix, avoid division) 
 ;The result x1 is in pole_x1, y1 is in pole_y1
@@ -218,6 +236,7 @@ RotatePole ENDP
 
 GameStart PROC
     INVOKE InitialPilar
+    mov total_frames, 0
     mov state, ST_STAND
     mov eax, pilars[0].start_x
     mov player_x, eax
@@ -229,11 +248,16 @@ GameStart PROC
 GameStart ENDP
 
 GameProc PROC uses eax
-    inc player_f
-    .IF player_f == 6
-        mov player_f, 0
+    inc total_frames
+    .IF state == ST_RUN
+        .IF total_frames & 1
+            inc player_f
+        .ENDIF
+        add player_x, 2
+        .IF player_f == 6
+            mov player_f, 0
+        .ENDIF
     .ENDIF
-
     .IF move_remain > 0
         INVOKE MovePilar, 5
         sub move_remain, 5
@@ -241,6 +265,11 @@ GameProc PROC uses eax
         INVOKE DeletePilar
         INVOKE InitialPilar
         mov move_remain, -100
+    .ENDIF
+
+    .IF widen_remain > 0
+        INVOKE WidenPilar, 1
+        sub widen_remain, 1
     .ENDIF
     ret
 GameProc ENDP
@@ -290,9 +319,29 @@ Scene2KeydownHandler PROC wParam:DWORD
             sub eax, GAP_RANDOM_RANGE_START
             mov move_remain, eax
             return 0
+        case VK_Z
+            mov widen_remain, 10
+            ;mov state, ST_WIDEN
+            return 0
+        case VK_SPACE
+            mov state, ST_RUN
+            return 0
     endsw
     return 0
 Scene2KeydownHandler ENDP
+
+Scene2KeyupHandler PROC wParam:DWORD
+    switch wParam
+        case VK_SPACE
+            mov state, ST_STAND
+            return 0
+    endsw
+    return 0
+Scene2KeyupHandler ENDP
+
+Scene3KeydownHandler PROC wParam:DWORD
+    return 0
+Scene3KeydownHandler ENDP
 
 KeydownProc PROC wParam:DWORD
     switch scene
@@ -305,12 +354,19 @@ KeydownProc PROC wParam:DWORD
         case 2
             INVOKE Scene2KeydownHandler, wParam
             ret
+        case 3
+            INVOKE Scene3KeydownHandler, wParam
     endsw
     return 0
 KeydownProc ENDP
 
 KeyupProc PROC wParam:DWORD
-    ret
+    switch scene
+        case 2
+            INVOKE Scene2KeyupHandler, wParam
+            ret
+    endsw
+    return 0
 KeyupProc ENDP
 
 END
