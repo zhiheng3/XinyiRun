@@ -14,14 +14,16 @@ DrawGameOverWin  PROTO hDC:DWORD
 DrawErrorWin     PROTO hDC:DWORD
 DrawBackground   PROTO hDC:DWORD,ID:DWORD
 DrawPilars       PROTO hDC:DWORD
+DrawPlayer       PROTO hDC:DWORD
 DrawPictureNormal      PROTO hDC:DWORD,ID:DWORD,posX:DWORD,posY:DWORD,wid:DWORD,hei:DWORD
-DrawPictureTransparent PROTO hDC:DWORD,ID:DWORD,posXD:DWORD,posYD:DWORD,posXS:DWORD,posYS:DWORD,wid:DWORD,hei:DWORD,color:DWORD
+DrawPictureTransparent PROTO hDC:DWORD,ID:DWORD,posXD:DWORD,posYD:DWORD,posXS:DWORD,posYS:DWORD,widD:DWORD,heiD:DWORD,widS:DWORD,heiS:DWORD,color:DWORD
 DrawTextF              PROTO hDC:DWORD,font_wid:DWORD,font_hei:DWORD,bold:DWORD,text_color:DWORD,text_posX:DWORD,text_posY:DWORD,text_addr:DWORD,text_size:DWORD
 DrawALine              PROTO hDC:DWORD,posX1:DWORD,posY1:DWORD,posX2:DWORD,posY2:DWORD,line_style:DWORD,line_width:DWORD,line_color:DWORD
 DrawAShape             PROTO hDC:DWORD,shape:DWORD,posX:DWORD,posY:DWORD,rect_width:DWORD,rect_height:DWORD,rect_color:DWORD,edge_color:DWORD,round_width:DWORD,round_height:DWORD
-DrawPlayer             PROTO hDC:DWORD
-DrawNumber             PROTO hDC:DWORD,num:DWORD,num_posX:DWORD,num_posY:DWORD,num_width:DWORD,num_height:DWORD
-
+DrawNumberArray        PROTO hDC:DWORD,num:DWORD,start_posX:DWORD,start_posY:DWORD,numD_width:DWORD,numD_height:DWORD,color:DWORD
+DrawANumber            PROTO hDC:DWORD,numSingle:DWORD,num_posX:DWORD,num_posY:DWORD,numD_width:DWORD,numD_height:DWORD,color:DWORD
+ParseNumber            PROTO num:DWORD
+PutNumInOrder          PROTO
 .data
 FontName db "roman",0
 basePoxY DWORD 380
@@ -34,6 +36,8 @@ score_array_norder DWORD 10 DUP(?)
 score_array_order DWORD 10 DUP(?)
 score_num DWORD 0
 deci DWORD 10
+numS_width DWORD 118
+numS_height DWORD 236
 .code
 DrawProc PROC hDC:DWORD
     .IF scene == 0
@@ -53,18 +57,21 @@ DrawProc ENDP
 DrawStartMenu PROC hDC:DWORD
     invoke DrawBackground,hDC,100
     .IF selected_menu == 0
-        invoke DrawPictureTransparent,hDC,111,250,150,0,0,120,60,0ffffffh
-        invoke DrawPictureTransparent,hDC,120,250,220,0,0,120,60,0ffffffh
-        invoke DrawPictureTransparent,hDC,130,250,290,0,0,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,111,250,150,0,0,120,60,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,120,250,220,0,0,120,60,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,130,250,290,0,0,120,60,120,60,0ffffffh
     .ELSEIF selected_menu == 1
-        invoke DrawPictureTransparent,hDC,110,250,150,0,0,120,60,0ffffffh
-        invoke DrawPictureTransparent,hDC,121,250,220,0,0,120,60,0ffffffh
-        invoke DrawPictureTransparent,hDC,130,250,290,0,0,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,110,250,150,0,0,120,60,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,121,250,220,0,0,120,60,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,130,250,290,0,0,120,60,120,60,0ffffffh
     .ELSEIF selected_menu == 2
-        invoke DrawPictureTransparent,hDC,110,250,150,0,0,120,60,0ffffffh
-        invoke DrawPictureTransparent,hDC,120,250,220,0,0,120,60,0ffffffh
-        invoke DrawPictureTransparent,hDC,131,250,290,0,0,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,110,250,150,0,0,120,60,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,120,250,220,0,0,120,60,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,131,250,290,0,0,120,60,120,60,0ffffffh
     .ENDIF
+    ; ;invoke DrawANumber,hDC,4,40,40,40,80
+    ; invoke DrawNumberArray,hDC,4567,40,40,40,80,0ffffffh
+    ; invoke DrawNumberArray,hDC,86786,100,100,20,40,0ffffffh
     ret
 DrawStartMenu ENDP
 
@@ -157,7 +164,7 @@ DrawPictureNormal PROC hDC:DWORD,ID:DWORD,posX:DWORD,posY:DWORD,wid:DWORD,hei:DW
     ret
 DrawPictureNormal ENDP
 
-DrawPictureTransparent PROC hDC:DWORD,ID:DWORD,posXD:DWORD,posYD:DWORD,posXS:DWORD,posYS:DWORD,wid:DWORD,hei:DWORD,color:DWORD
+DrawPictureTransparent PROC hDC:DWORD,ID:DWORD,posXD:DWORD,posYD:DWORD,posXS:DWORD,posYS:DWORD,widD:DWORD,heiD:DWORD,widS:DWORD,heiS:DWORD,color:DWORD
     LOCAL hBmpsource:DWORD
     LOCAL hDCback:DWORD
     pusha
@@ -166,7 +173,7 @@ DrawPictureTransparent PROC hDC:DWORD,ID:DWORD,posXD:DWORD,posYD:DWORD,posXS:DWO
     invoke LoadImage,hInstance,ID,IMAGE_BITMAP,0,0,LR_LOADTRANSPARENT or LR_LOADMAP3DCOLORS
     mov hBmpsource,eax
     invoke SelectObject,hDCback,hBmpsource
-    invoke TransparentBlt,hDC,posXD,posYD,wid,hei,hDCback,posXS,posYS,wid,hei,color
+    invoke TransparentBlt,hDC,posXD,posYD,widD,heiD,hDCback,posXS,posYS,widS,heiS,color
     invoke DeleteObject,hBmpsource
     invoke DeleteDC,hDCback
     popa
@@ -255,18 +262,37 @@ DrawPlayer PROC hDC:DWORD
 
     imul edx,playerWidth
     mov picStartX,edx
-    invoke DrawPictureTransparent,hDC,301,posX,posY,picStartX,0,playerWidth,playerHeight,0ffffffh
+    invoke DrawPictureTransparent,hDC,301,posX,posY,picStartX,0,playerWidth,playerHeight,playerWidth,playerHeight,0ffffffh
     popa
     ret
 DrawPlayer ENDP
 
-DrawNumber PROC hDC:DWORD,num:DWORD,num_posX:DWORD,num_posY:DWORD,num_width:DWORD,num_height:DWORD
+DrawNumberArray PROC hDC:DWORD,num:DWORD,start_posX:DWORD,start_posY:DWORD,numD_width:DWORD,numD_height:DWORD,color:DWORD
     pusha
+    invoke ParseNumber,num
+    invoke PutNumInOrder
+    mov ecx,score_num
+    mov esi,offset score_array_order
 
-
+    mov eax,start_posX
+DrawNumL:
+    mov ebx,[esi]
+    invoke DrawANumber,hDC,ebx,eax,start_posY,numD_width,numD_height,color
+    add eax,numD_width
+    add esi,TYPE score_array_order
+    Loop DrawNumL    
     popa
     ret
-DrawNumber ENDP 
+DrawNumberArray ENDP
+
+DrawANumber PROC hDC:DWORD,numSingle:DWORD,num_posX:DWORD,num_posY:DWORD,numD_width:DWORD,numD_height:DWORD,color:DWORD
+    pusha
+    mov eax,numSingle
+    add eax,10
+    invoke DrawPictureTransparent,hDC,eax,num_posX,num_posY,0,0,numD_width,numD_height,numS_width,numS_height,color
+    popa
+    ret
+DrawANumber ENDP 
 
 ParseNumber PROC num:DWORD
     pusha
