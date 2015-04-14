@@ -33,10 +33,10 @@ COST_C = 20
 ST_STAND = 0   ;Wait for operation
 ST_HOLD = 1    ;Pressing space
 ST_ROTATE = 2  ;Rotate pole
-ST_BONUS = 3   ;Add bonus
-ST_RUN = 4     ;Running
-ST_MOVE = 5    ;Move pilars
-ST_WIDEN = 6    ;Widen pilar
+ST_RUN = 3     ;Running
+ST_MOVE = 4    ;Move pilars
+ST_WIDEN = 5   ;Widen pilar
+ST_DEAD = 6    ;Player dead
 
 .data?
 state DWORD ?
@@ -432,6 +432,7 @@ GameSet ENDP
 GameStart PROC
     INVOKE InitialPilar
     mov total_frames, 0
+    mov score, 0
     mov state, ST_STAND
     INVOKE GameSet
     mov scene, 2
@@ -440,15 +441,54 @@ GameStart ENDP
 
 GameProc PROC uses eax
     inc total_frames
-    .IF state == ST_RUN
-        .IF total_frames & 1
-            inc player_f
-        .ENDIF
-        add player_x, 2
-        .IF player_f == 6
-            mov player_f, 0
-        .ENDIF
-    .ENDIF
+    switch state
+        case ST_STAND
+            ret
+        case ST_HOLD
+            INVOKE ExtendPole, 4
+            ret
+        case ST_ROTATE
+            .IF poleAng == 0
+                mov state, ST_RUN
+                ret
+            .ENDIF
+            sub poleAng, 2
+            INVOKE CalcPole
+            ret
+        case ST_RUN
+            .IF total_frames & 1
+                inc player_f
+            .ENDIF
+            .IF player_f == 6
+                mov player_f, 0
+            .ENDIF 
+            add player_x, 2
+            mov eax, finalX
+            .IF player_x >= eax
+                mov player_x, eax
+                .IF isDead == 0
+                    inc score
+                    mov state, ST_MOVE
+                .ELSE
+                    mov state, ST_DEAD
+                .ENDIF
+            .ENDIF
+            ret
+        case ST_MOVE
+            ret
+        case ST_WIDEN
+            ret
+        case ST_DEAD
+            sub player_y, 1
+            .IF player_y == 0
+                INVOKE GameSet
+                mov state, ST_STAND
+            .ENDIF
+            ret
+    endsw
+
+
+
     .IF move_remain > 0
         INVOKE MovePilar, 5
         sub move_remain, 5
@@ -459,16 +499,7 @@ GameProc PROC uses eax
     .ENDIF
 
     .IF state == ST_ROTATE
-        .IF poleAng == 0
-            mov state, ST_BONUS
-            ret
-        .ENDIF
-        dec poleAng
-        INVOKE CalcPole
-    .ENDIF
 
-    .IF state == ST_HOLD
-        INVOKE ExtendPole, 1
     .ENDIF
 
     .IF widen_remain > 0
