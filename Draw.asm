@@ -62,17 +62,17 @@ DrawProc ENDP
 DrawStartMenu PROC hDC:DWORD
     invoke DrawBackground,hDC,100
     .IF selected_menu == 0
-        invoke DrawPictureTransparent,hDC,111,250,150,0,0,120,60,120,60,0ffffffh
-        invoke DrawPictureTransparent,hDC,120,250,220,0,0,120,60,120,60,0ffffffh
-        invoke DrawPictureTransparent,hDC,130,250,290,0,0,120,60,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,111,250,150,0,0,120,60,472,236,0ffffffh
+        invoke DrawPictureTransparent,hDC,120,250,220,0,0,120,60,472,236,0ffffffh
+        invoke DrawPictureTransparent,hDC,130,250,290,0,0,120,60,472,236,0ffffffh
     .ELSEIF selected_menu == 1
-        invoke DrawPictureTransparent,hDC,110,250,150,0,0,120,60,120,60,0ffffffh
-        invoke DrawPictureTransparent,hDC,121,250,220,0,0,120,60,120,60,0ffffffh
-        invoke DrawPictureTransparent,hDC,130,250,290,0,0,120,60,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,110,250,150,0,0,120,60,472,236,0ffffffh
+        invoke DrawPictureTransparent,hDC,121,250,220,0,0,120,60,472,236,0ffffffh
+        invoke DrawPictureTransparent,hDC,130,250,290,0,0,120,60,472,236,0ffffffh
     .ELSEIF selected_menu == 2
-        invoke DrawPictureTransparent,hDC,110,250,150,0,0,120,60,120,60,0ffffffh
-        invoke DrawPictureTransparent,hDC,120,250,220,0,0,120,60,120,60,0ffffffh
-        invoke DrawPictureTransparent,hDC,131,250,290,0,0,120,60,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,110,250,150,0,0,120,60,472,236,0ffffffh
+        invoke DrawPictureTransparent,hDC,120,250,220,0,0,120,60,472,236,0ffffffh
+        invoke DrawPictureTransparent,hDC,131,250,290,0,0,120,60,472,236,0ffffffh
     .ENDIF
     ret
 DrawStartMenu ENDP

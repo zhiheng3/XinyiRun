@@ -20,14 +20,14 @@
 19 BITMAP DISCARDABLE "./image/number/9.bmp"
 
 100 BITMAP DISCARDABLE "./image/XinyiRun_menu_backgroud.bmp"
-110 BITMAP DISCARDABLE "./image/start_button_unclick.bmp"
-111 BITMAP DISCARDABLE "./image/start_button_click.bmp"
-120 BITMAP DISCARDABLE "./image/help_button_unclick.bmp"
-121 BITMAP DISCARDABLE "./image/help_button_click.bmp"
-130 BITMAP DISCARDABLE "./image/quit_button_unclick.bmp"
-131 BITMAP DISCARDABLE "./image/quit_button_click.bmp"
+110 BITMAP DISCARDABLE "./image/start.bmp"
+111 BITMAP DISCARDABLE "./image/start_clicked.bmp"
+120 BITMAP DISCARDABLE "./image/help.bmp"
+121 BITMAP DISCARDABLE "./image/help_clicked.bmp"
+130 BITMAP DISCARDABLE "./image/quit.bmp"
+131 BITMAP DISCARDABLE "./image/quit_clicked.bmp"
 
-200 BITMAP DISCARDABLE "./image/qXinyiRun_help.bmp"
+200 BITMAP DISCARDABLE "./image/XinyiRun_help.bmp"
 
 300 BITMAP DISCARDABLE "./image/XinyiRun_scene.bmp"
 
