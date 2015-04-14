@@ -91,6 +91,7 @@ isDead   DWORD 0
 isDown   DWORD 0
 bonus    DWORD 0
 finalX   DWORD 0
+maxX     DWORD 0
 
 
 .code
@@ -476,6 +477,10 @@ GameProc PROC uses eax ebx
             ret
         case ST_HOLD
             INVOKE ExtendPole, 4
+            .IF 
+                INVOKE CalcResult
+                mov state, ST_ROTATE
+            .ENDIF
             ret
         case ST_ROTATE
             .IF poleAng <= 0
@@ -609,6 +614,8 @@ Scene2KeydownHandler PROC wParam:DWORD
         case VK_H ;Help
             mov history_scene, 2
             mov scene, 1
+            return 0
+        case VK_S ;Sound
             return 0
         case VK_Z ;Tool Z
             .IF flagZ == 0 && total_bonus >= COST_Z
