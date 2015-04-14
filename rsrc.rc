@@ -27,6 +27,8 @@
 130 BITMAP DISCARDABLE "./image/quit_button_unclick.bmp"
 131 BITMAP DISCARDABLE "./image/quit_button_click.bmp"
 
+200 BITMAP DISCARDABLE "./image/qXinyiRun_help.bmp"
+
 300 BITMAP DISCARDABLE "./image/XinyiRun_scene.bmp"
 
 310 BITMAP DISCARDABLE "./image/button/bridge.bmp"
@@ -40,6 +42,8 @@
 351 BITMAP DISCARDABLE "./image/button/stretch_used.bmp"
 361 BITMAP DISCARDABLE "./image/player_walk.bmp"
 362 BITMAP DISCARDABLE "./image/stand.bmp"
+
+400 BITMAP DISCARDABLE "./image/XinyiRun_gameover.bmp"
 1000 WAVE "./music/BGM.wav"
 VS_VERSION_INFO VERSIONINFO
 FILEVERSION 1, 0, 0, 0

@@ -78,7 +78,7 @@ DrawStartMenu PROC hDC:DWORD
 DrawStartMenu ENDP
 
 DrawHelpWin PROC hDC:DWORD
-    invoke DrawBackground,hDC,300
+    invoke DrawBackground,hDC,200
     ret
 DrawHelpWin ENDP  
 
@@ -109,7 +109,7 @@ DrawGamePlayWin PROC hDC:DWORD
 DrawGamePlayWin ENDP
 
 DrawGameOverWin PROC hDC:DWORD
-
+    invoke DrawBackground,hDC,400    
     ret
 DrawGameOverWin ENDP
 
