@@ -434,13 +434,14 @@ CalcResult PROC USES eax ebx esi;Calculate the result of move
 CalcResult ENDP
 
 ;Set the player's and pole's position
-GameSet PROC USES ebx
+GameSet PROC USES ebx esi
     ;Player
     mov ebx, pilars[0].start_x
     mov player_x, ebx
     mov ebx, pilars[0].height
     mov player_y, ebx
     mov player_f, 0
+
 
     ;Pole
     mov ebx, pilars[0].end_x
@@ -454,6 +455,12 @@ GameSet PROC USES ebx
     ;Tools
     mov flagX, 0
     mov flagZ, 0
+
+    mov esi, TYPE pilars
+    mov ebx, pilars[esi].end_x
+    sub ebx, pilars[0].end_x
+    add ebx, 20
+    mov maxX, ebx
     ret
 GameSet ENDP
 
@@ -477,7 +484,8 @@ GameProc PROC uses eax ebx
             ret
         case ST_HOLD
             INVOKE ExtendPole, 4
-            .IF 
+            mov ebx, maxX
+            .IF poleLen > ebx
                 INVOKE CalcResult
                 mov state, ST_ROTATE
             .ENDIF
@@ -583,7 +591,7 @@ Scene0KeydownHandler PROC wParam:DWORD
                 mov eax,SND_RESOURCE
                 or eax,SND_ASYNC
                 or eax,SND_LOOP
-                invoke PlaySound,1000,hInstance,eax
+                INVOKE PlaySound,1000,hInstance,eax
                 pop eax
                 return 0
             .ELSEIF selected_menu == 2
@@ -598,7 +606,7 @@ Scene1KeydownHandler PROC wParam:DWORD
         case VK_ESCAPE
             mov eax, history_scene
             mov scene, eax
-            invoke PlaySound,NULL,hInstance,SND_ASYNC
+            INVOKE PlaySound,NULL,hInstance,SND_ASYNC
             return 0
     endsw
     return 0
