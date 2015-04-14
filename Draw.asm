@@ -27,7 +27,7 @@ ParseNumber            PROTO num:DWORD
 PutNumInOrder          PROTO
 .data
 FontName db "roman",0
-basePoxY DWORD 380
+basePosY DWORD 380
 pilarPosY1 DWORD 280
 baseHeight DWORD 20
 playerHeightS DWORD 50
@@ -41,6 +41,7 @@ score_num DWORD 0
 deci DWORD 10
 numS_width DWORD 118
 numS_height DWORD 236
+numberoffset DWORD 80
 .code
 DrawProc PROC hDC:DWORD
     .IF scene == 0
@@ -90,14 +91,13 @@ DrawGamePlayWin PROC hDC:DWORD
     invoke GetClientRect,hWnd,addr rect
     invoke DrawBackground,hDC,300
     push eax
-    mov eax,basePoxY
+    mov eax,basePosY
     add eax,baseHeight
-    invoke DrawAShape,hDC,1,0,basePoxY,rect.right,eax,0000000h,0000000h,0,0
+    invoke DrawAShape,hDC,1,0,basePosY,rect.right,eax,0000000h,0000000h,0,0
     pop eax
     invoke DrawPilars,hDC
     invoke DrawPlayer,hDC
     invoke DrawPole,hDC
-    invoke DrawNumberArray,hDC,4567,335,6,25,50,0ffffffh
     ret
 DrawGamePlayWin ENDP
 
@@ -118,7 +118,7 @@ DrawPilars PROC hDC:DWORD
     mov esi, 0
     mov ecx,PILAR_NUM
 DrawP:
-    invoke DrawAShape,hDC,1,pilars[esi].start_x,pilarPosY1,pilars[esi].end_x,basePoxY,0111111h,0111111h,0,0
+    invoke DrawAShape,hDC,1,pilars[esi].start_x,pilarPosY1,pilars[esi].end_x,basePosY,0111111h,0111111h,0,0
     add esi, structSize
     Loop DrawP  
     popa
@@ -128,11 +128,10 @@ DrawPilars ENDP
 DrawPole PROC hDC:DWORD
     LOCAL rect:RECT
     pusha
-    invoke GetClientRect,hWnd,addr rect 
-    mov eax,rect.bottom
+    mov eax,basePosY
     sub eax,pole_y0
 
-    mov ebx,rect.bottom
+    mov ebx,basePosY
     sub ebx,pole_y1
     invoke DrawALine,hDC,pole_x0,eax,pole_x1,ebx,PS_SOLID,2,0000000h
     popa
@@ -311,7 +310,9 @@ DrawANumber PROC hDC:DWORD,numSingle:DWORD,num_posX:DWORD,num_posY:DWORD,numD_wi
     pusha
     mov eax,numSingle
     add eax,10
-    invoke DrawPictureTransparent,hDC,eax,num_posX,num_posY,0,0,numD_width,numD_height,numS_width,numS_height,color
+    mov ebx,numS_height
+    sub ebx,numberoffset
+    invoke DrawPictureTransparent,hDC,eax,num_posX,num_posY,0,numberoffset,numD_width,numD_height,numS_width,ebx,color
     popa
     ret
 DrawANumber ENDP 
