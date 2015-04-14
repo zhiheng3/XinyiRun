@@ -98,6 +98,7 @@ DrawGamePlayWin PROC hDC:DWORD
     invoke DrawPilars,hDC
     invoke DrawPlayer,hDC
     invoke DrawPole,hDC
+    invoke DrawNumberArray,hDC,score,335,20,20,30,0ffffffh
     ret
 DrawGamePlayWin ENDP
 
