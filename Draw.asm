@@ -73,11 +73,6 @@ DrawStartMenu PROC hDC:DWORD
         invoke DrawPictureTransparent,hDC,120,250,220,0,0,120,60,120,60,0ffffffh
         invoke DrawPictureTransparent,hDC,131,250,290,0,0,120,60,120,60,0ffffffh
     .ENDIF
-    ; ;invoke DrawANumber,hDC,4,40,40,40,80
-    ; invoke DrawNumberArray,hDC,4567,40,40,40,80,0ffffffh
-    ; invoke DrawNumberArray,hDC,86786,100,100,20,40,0ffffffh
-    ; invoke DrawALine,hDC,10,10,100,100,PS_SOLID,2,0000000h
-    ; invoke DrawALine,hDC,200,10,200,100,PS_DOT,1,0000000h
     ret
 DrawStartMenu ENDP
 
@@ -127,11 +122,9 @@ DrawP:
 DrawPilars ENDP
 
 DrawPole PROC hDC:DWORD
-    LOCAL rect:RECT
     pusha
     mov eax,basePosY
     sub eax,pole_y0
-
     mov ebx,basePosY
     sub ebx,pole_y1
     invoke DrawALine,hDC,pole_x0,eax,pole_x1,ebx,PS_SOLID,2,0000000h
@@ -281,7 +274,7 @@ DrawPlayer PROC hDC:DWORD
     div freq
     ;mov frequency,edx
 
-    imul edx,playerWidthD
+    imul edx,playerWidthS
     mov picStartX,edx
     invoke DrawPictureTransparent,hDC,301,posX,posY,picStartX,0,playerWidthD,playerHeightD,playerWidthS,playerHeightS,0ffffffh
     popa
