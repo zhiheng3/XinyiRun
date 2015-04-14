@@ -43,6 +43,18 @@ state DWORD ?
 history_scene DWORD ?
 
 .data
+;Sin and cos value
+sin_value DWORD 0,174,348,523,697,871,1045,1218,1391,1564,1736,
+                  1908,2079,2249,2419,2588,2756,2923,3090,3255,3420,
+                  3583,3746,3907,4067,4226,4383,4539,4694,4848,4999,
+                  5150,5299,5446,5591,5735,5877,6018,6156,6293,6427,
+                  6560,6691,6819,6946,7071
+cos_value DWORD 10000,9998,9993,9986,9975,9961,9945,9925,9902,9876,9848,
+                      9816,9781,9743,9702,9659,9612,9563,9510,9455,9396,
+                      9335,9271,9205,9135,9063,8987,8910,8829,8746,8660,
+                      8571,8480,8386,8290,8191,8090,7986,7880,7771,7660,
+                      7547,7431,7313,7193,7071
+
 hold_remain SDWORD -100
 move_remain SDWORD -100
 
@@ -74,6 +86,7 @@ high_score DWORD 0
 widen_remain SDWORD 0
 
 ;Temps
+poleAng  DWORD 0
 poleLen  DWORD 0
 isDead   DWORD 0
 bonus    DWORD 0
@@ -93,6 +106,41 @@ InitGame PROC
 
     ret
 InitGame ENDP
+
+;Sin and Cos function
+Sin PROC USES esi ebx, x:DWORD
+    mov eax, 4
+    .IF x <= 45
+        mov eax, 4
+        mul x
+        mov esi, eax
+        return sin_value[esi]
+    .ELSE
+        mov ebx, 90
+        sub ebx, x
+        mul ebx
+        mov esi, eax
+        return cos_value[esi]
+    .ENDIF
+    ret
+Sin ENDP
+
+Cos PROC USES esi ebx, x:DWORD
+    mov eax, 4
+    .IF x <= 45
+        mov eax, 4
+        mul x
+        mov esi, eax
+        return cos_value[esi]
+    .ELSE
+        mov ebx, 90
+        sub ebx, x
+        mul ebx
+        mov esi, eax
+        return sin_value[esi]
+    .ENDIF
+    ret
+Cos ENDP
 
 ;Get random number between first and second parameter
 ;The result is in eax
@@ -247,7 +295,7 @@ WidenPilar ENDP
 ;The result x1 is in pole_x1, y1 is in pole_y1
 RotatePole PROC USES eax ecx,
     x0:DWORD, y0: DWORD
-    local temp:DWORD, divisor:DWORD
+    local temp:SDWORD, divisor:DWORD
     mov divisor, 10000
     mov edx, 0
 
@@ -275,6 +323,26 @@ RotatePole PROC USES eax ecx,
 
     ret
 RotatePole ENDP
+
+;Calculate pole's position with length and polar angle
+CalcPole PROC
+    LOCAL divisor:DWORD
+    mov divisor, 10000
+
+    INVOKE Cos, poleAng
+    mul poleLen
+    div divisor
+    add eax, pole_x0
+    mov pole_x1, eax
+
+    INVOKE Sin, poleAng
+    mul poleLen
+    div divisor
+    add eax, pole_y0
+    mov pole_y1, eax
+
+    ret
+CalcPole ENDP
 
 ExtendPole PROC USES ebx, Step:DWORD
     mov ebx, Step
@@ -353,12 +421,11 @@ GameSet PROC USES ebx
     ;Pole
     mov ebx, pilars[0].end_x
     mov pole_x0, ebx
-    mov pole_x1, ebx
     mov ebx, pilars[0].height
     mov pole_y0, ebx
-    add ebx, POLE_INIT
-    mov pole_y1, ebx
-    mov poleLen, ebx
+    mov poleLen, 10
+    mov poleAng, 90
+    INVOKE CalcPole
     ret
 GameSet ENDP
 
@@ -389,6 +456,15 @@ GameProc PROC uses eax
         INVOKE DeletePilar
         INVOKE InitialPilar
         mov move_remain, -100
+    .ENDIF
+
+    .IF state == ST_ROTATE
+        .IF poleAng == 0
+            mov state, ST_BONUS
+            ret
+        .ENDIF
+        dec poleAng
+        INVOKE CalcPole
     .ENDIF
 
     .IF state == ST_HOLD

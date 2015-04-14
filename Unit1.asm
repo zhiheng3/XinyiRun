@@ -37,6 +37,17 @@ add_bonus DWORD 0
 high_score DWORD 0
 random_seed DWORD ?
 
+sin_value DWORD 0,174,348,523,697,871,1045,1218,1391,1564,1736,
+                  1908,2079,2249,2419,2588,2756,2923,3090,3255,3420,
+                  3583,3746,3907,4067,4226,4383,4539,4694,4848,4999,
+                  5150,5299,5446,5591,5735,5877,6018,6156,6293,6427,
+                  6560,6691,6819,6946,7071
+cos_value DWORD 0,9998,9993,9986,9975,9961,9945,9925,9902,9876,9848,
+                  9816,9781,9743,9702,9659,9612,9563,9510,9455,9396,
+                  9335,9271,9205,9135,9063,8987,8910,8829,8746,8660,
+                  8571,8480,8386,8290,8191,8090,7986,7880,7771,7660,
+                  7547,7431,7313,7193,7071
+
 .code
 
 start:
@@ -233,6 +244,40 @@ DisplayPilars PROC
     ret
 DisplayPilars ENDP
 
+Sin PROC USES esi ebx, x:DWORD
+    mov eax, 4
+    .IF x <= 45
+        mov eax, 4
+        mul x
+        mov esi, eax
+        return sin_value[esi]
+    .ELSE
+        mov ebx, 90
+        sub ebx, x
+        mul ebx
+        mov esi, eax
+        return cos_value[esi]
+    .ENDIF
+    ret
+Sin ENDP
+
+Cos PROC USES esi ebx, x:DWORD
+    mov eax, 4
+    .IF x <= 45
+        mov eax, 4
+        mul x
+        mov esi, eax
+        return cos_value[esi]
+    .ELSE
+        mov ebx, 90
+        sub ebx, x
+        mul ebx
+        mov esi, eax
+        return sin_value[esi]
+    .ENDIF
+    ret
+Cos ENDP
+
 main PROC
     cls
     ;print "Hello World",13,10
@@ -242,13 +287,18 @@ main PROC
     ;INVOKE RotatePole, 19,70
     ;printf("%d\n", pole_x1)
     ;printf("%d\n", pole_y1)
-    INVOKE InitialPilar
+    ;INVOKE InitialPilar
 
-    INVOKE DisplayPilars
+    ;INVOKE DisplayPilars
 
-    INVOKE DeletePilar
+    ;INVOKE DeletePilar
 
-    INVOKE DisplayPilars
+    ;INVOKE DisplayPilars
+
+    INVOKE Sin, 90
+    printf("%d\n", eax)
+    INVOKE Cos, 80
+    printf("%d\n", eax)
 
     ;push ecx
     ;printf ("---------------\n")
