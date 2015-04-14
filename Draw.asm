@@ -28,7 +28,7 @@ basePoxY DWORD 380
 pilarPosY1 DWORD 280
 baseHeight DWORD 20
 playerHeight DWORD 50
-playerWidth DWORD 36
+playerWidth DWORD 62
 freq DWORD 6
 score_array_norder DWORD 10 DUP(?)
 score_array_order DWORD 10 DUP(?)
