@@ -244,7 +244,7 @@ DisplayPilars PROC
     ret
 DisplayPilars ENDP
 
-Sin PROC USES esi ebx, x:DWORD
+Sin PROC USES esi ebx, x:SDWORD
     mov eax, 4
     .IF x <= 45
         mov eax, 4
@@ -261,7 +261,7 @@ Sin PROC USES esi ebx, x:DWORD
     ret
 Sin ENDP
 
-Cos PROC USES esi ebx, x:DWORD
+Cos PROC USES esi ebx, x:SDWORD
     mov eax, 4
     .IF x <= 45
         mov eax, 4

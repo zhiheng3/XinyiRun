@@ -66,10 +66,10 @@ pilars Pilar PILAR_NUM DUP(<0, 0, 0>)
 player_x DWORD 0
 player_y DWORD 0
 player_f DWORD 0
-pole_x0 DWORD 0
-pole_y0 DWORD 0
-pole_x1 DWORD 0
-pole_y1 DWORD 0
+pole_x0 SDWORD 0
+pole_y0 SDWORD 0
+pole_x1 SDWORD 0
+pole_y1 SDWORD 0
 life DWORD 0
 score DWORD 0
 total_bonus DWORD 0
@@ -85,9 +85,10 @@ widen_remain DWORD 0
 move_remain DWORD 0
 
 ;Temps
-poleAng  DWORD 0
+poleAng SDWORD 0
 poleLen  DWORD 0
 isDead   DWORD 0
+isDown   DWORD 0
 bonus    DWORD 0
 finalX   DWORD 0
 
@@ -325,20 +326,34 @@ RotatePole ENDP
 
 ;Calculate pole's position with length and polar angle
 CalcPole PROC
-    LOCAL divisor:DWORD
+    LOCAL divisor:DWORD, flag:DWORD
     mov divisor, 10000
+    mov flag, 0
 
-    INVOKE Cos, poleAng
+    .IF poleAng < 0
+        mov flag, 1
+        mov ebx, poleAng
+        neg ebx
+    .ELSE
+        mov ebx, poleAng
+    .ENDIF
+
+    INVOKE Cos, ebx
     mul poleLen
     div divisor
     add eax, pole_x0
     mov pole_x1, eax
 
-    INVOKE Sin, poleAng
+    INVOKE Sin, ebx
     mul poleLen
     div divisor
-    add eax, pole_y0
-    mov pole_y1, eax
+    mov ebx, pole_y0
+    .IF flag == 0
+        add ebx, eax
+    .ELSE
+        sub ebx, eax
+    .ENDIF
+    mov pole_y1, ebx
 
     ret
 CalcPole ENDP
@@ -366,10 +381,12 @@ CalcResult PROC USES eax ebx esi;Calculate the result of move
     add esi, structSize
     mov bonus, 0
     mov isDead, 0
+    mov isDown, 0
     mov dis, 10000
     mov ebx, pilars[esi].start_x
     .IF finalX < ebx
         mov isDead, 1
+        mov isDown, 1
     .ELSE
         mov ebx, finalX
         sub ebx, pilars[esi].start_x
@@ -387,6 +404,13 @@ CalcResult PROC USES eax ebx esi;Calculate the result of move
         .IF ebx < dis
             mov dis, ebx
         .ENDIF
+    .ENDIF
+
+    .IF isDead == 0
+        mov ebx, pilars[esi].start_x
+        mov finalX, ebx
+    .ELSEIF isDown == 1
+        sub finalX, 30
     .ENDIF
 
     ;Calculate bonus
@@ -422,9 +446,13 @@ GameSet PROC USES ebx
     mov pole_x0, ebx
     mov ebx, pilars[0].height
     mov pole_y0, ebx
-    mov poleLen, 10
+    mov poleLen, 5
     mov poleAng, 90
     INVOKE CalcPole
+
+    ;Tools
+    mov flagX, 0
+    mov flagZ, 0
     ret
 GameSet ENDP
 
@@ -432,6 +460,9 @@ GameStart PROC
     INVOKE InitialPilar
     mov total_frames, 0
     mov score, 0
+    mov total_bonus, 20
+    mov add_bonus, 0
+    mov life, 1
     INVOKE GameSet
     mov state, ST_STAND
     mov scene, 2
@@ -447,11 +478,11 @@ GameProc PROC uses eax ebx
             INVOKE ExtendPole, 4
             ret
         case ST_ROTATE
-            .IF poleAng == 0
+            .IF poleAng <= 0
                 mov state, ST_RUN
                 ret
             .ENDIF
-            sub poleAng, 2
+            sub poleAng, 5
             INVOKE CalcPole
             ret
         case ST_RUN
@@ -461,7 +492,7 @@ GameProc PROC uses eax ebx
             .IF player_f == 6
                 mov player_f, 0
             .ENDIF 
-            add player_x, 2
+            add player_x, 4
             mov eax, finalX
             .IF player_x >= eax
                 mov player_x, eax
@@ -498,35 +529,28 @@ GameProc PROC uses eax ebx
             .ENDIF
             ret
         case ST_WIDEN
+            .IF widen_remain > 0
+                INVOKE WidenPilar, 1
+                sub widen_remain, 1
+            .ELSE
+                mov state, ST_STAND
+            .ENDIF
             ret
         case ST_DEAD
-            sub player_y, 1
+            ;Pole
+                .IF isDown == 1 && pole_y1 >= 0 && poleAng > -90
+                    sub poleAng, 5
+                    INVOKE CalcPole
+                .ENDIF
+
+            ;Player
+            sub player_y, 4
             .IF player_y == 0
                 INVOKE GameSet
                 mov state, ST_STAND
             .ENDIF
             ret
     endsw
-
-
-
-    .IF move_remain > 0
-        INVOKE MovePilar, 5
-        sub move_remain, 5
-    .ELSEIF move_remain != -100
-        INVOKE DeletePilar
-        INVOKE InsertPilar
-        mov move_remain, -100
-    .ENDIF
-
-    .IF state == ST_ROTATE
-
-    .ENDIF
-
-    .IF widen_remain > 0
-        INVOKE WidenPilar, 1
-        sub widen_remain, 1
-    .ENDIF
     ret
 GameProc ENDP
 
@@ -587,19 +611,28 @@ Scene2KeydownHandler PROC wParam:DWORD
             mov scene, 1
             return 0
         case VK_Z ;Tool Z
-            .IF flagZ == 0
+            .IF flagZ == 0 && total_bonus >= COST_Z
+                mov state, ST_WIDEN
                 mov widen_remain, 10
+                sub total_bonus, COST_Z
                 mov flagZ, 1
             .ENDIF
             ;mov state, ST_WIDEN
             return 0
         case VK_X ;Tool X
-            .IF flagX == 0
-                mov widen_remain, 10
+            .IF flagX == 0 && total_bonus >= COST_X
+                mov poleLen, 5
+                mov poleAng, 0
+                INVOKE CalcPole
+                sub total_bonus, COST_X
                 mov flagX, 1
             .ENDIF
             return 0
         case VK_C ;Tool C
+            .IF total_bonus >= COST_C
+                inc life
+                sub total_bonus, COST_C
+            .ENDIF
             return 0
         case VK_SPACE ;Play
             mov state, ST_HOLD
@@ -622,6 +655,31 @@ Scene2KeyupHandler PROC wParam:DWORD
 Scene2KeyupHandler ENDP
 
 Scene3KeydownHandler PROC wParam:DWORD
+    switch wParam
+        case VK_UP
+            .IF selected_menu > 0
+                dec selected_menu
+            .ENDIF
+            return 0
+        case VK_DOWN
+            .IF selected_menu < 2
+                inc selected_menu
+            .ENDIF
+            return 0
+        case VK_RETURN
+            .IF selected_menu == 0
+                INVOKE GameStart
+                return 0
+            .ELSEIF selected_menu == 1
+                mov history_scene, 0
+                mov scene, 1
+                mov selected_menu, 0
+                return 0
+            .ELSEIF selected_menu == 2
+                return 1
+            .ENDIF
+    endsw
+    return 0
     return 0
 Scene3KeydownHandler ENDP
 

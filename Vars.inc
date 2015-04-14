@@ -32,10 +32,10 @@ EXTERNDEF pilars:Pilar, ;Array of pilars
           player_x:DWORD, ;Player position x-coor
           player_y:DWORD, ;Player position y-coor
           player_f:DWORD, ;Player frame number
-          pole_x0:DWORD, ;Pole left x-coor
-          pole_y0:DWORD, ;Pole left y-coor
-          pole_x1:DWORD, ;Pole right x-coor
-          pole_y1:DWORD ;Pole right y-coor
+          pole_x0:SDWORD, ;Pole left x-coor
+          pole_y0:SDWORD, ;Pole left y-coor
+          pole_x1:SDWORD, ;Pole right x-coor
+          pole_y1:SDWORD ;Pole right y-coor
 
 EXTERNDEF life:DWORD, ;Remain lives
           score:DWORD, ;Current score

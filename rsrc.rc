@@ -47,13 +47,13 @@ BEGIN
   BEGIN
     BLOCK "040904B0"
     BEGIN
-      VALUE "CompanyName",      "Your Company Name\000"
-      VALUE "FileDescription",  "Description Of Application\000"
+      VALUE "CompanyName",      "THSS2012\000"
+      VALUE "FileDescription",  "XinyiRun\000"
       VALUE "FileVersion",      "1.0\000"
       VALUE "InternalName",     "Item Name\000"
       VALUE "OriginalFilename", "XinyiRun.exe\000"
-      VALUE "LegalCopyright",   "\251 2010-2020 Application Copyright Holder\000"
-      VALUE "ProductName",      "Item Name\000"
+      VALUE "LegalCopyright",   "\251 2012-2015\000"
+      VALUE "ProductName",      "MASM32\000"
       VALUE "ProductVersion",   "1.0\000"
     END
   END
