@@ -24,9 +24,17 @@ DrawNumber             PROTO hDC:DWORD,num:DWORD,num_posX:DWORD,num_posY:DWORD,n
 
 .data
 FontName db "roman",0
+
 basePoxY DWORD 380
 pilarPosY1 DWORD 280
 baseHeight DWORD 20
+playerHeight DWORD 50
+playerWidth DWORD 36
+freq DWORD 6
+score_array_norder DWORD 10 DUP(?)
+score_array_order DWORD 10 DUP(?)
+score_num DWORD 0
+deci DWORD 10
 .code
 DrawProc PROC hDC:DWORD
     .IF scene == 0
@@ -76,6 +84,7 @@ DrawGamePlayWin PROC hDC:DWORD
     invoke DrawAShape,hDC,1,0,basePoxY,rect.right,eax,0000000h,0000000h,0,0
     pop eax
     invoke DrawPilars,hDC
+    invoke DrawPlayer,hDC
     ret
 DrawGamePlayWin ENDP
 
@@ -225,16 +234,32 @@ DrawAShape PROC hDC:DWORD,shape:DWORD,posX1:DWORD,posY1:DWORD,posX2:DWORD,posY2:
 DrawAShape ENDP
 
 DrawPlayer PROC hDC:DWORD
+    ;LOCAL frequency:DWORD
+    LOCAl posX:DWORD
+    LOCAl posY:DWORD
+    LOCAl picStartX:DWORD
     pusha
+    mov eax,player_x
+    mov posX,eax
 
+    mov ebx,pilarPosY1
+    sub ebx,playerHeight
+
+    mov posY,ebx
+
+    xor edx,edx
+    xor eax,eax
+    mov eax,player_f
+
+    div freq
+    ;mov frequency,edx
+
+    imul edx,playerWidth
+    mov picStartX,edx
+    invoke DrawPictureTransparent,hDC,301,posX,posY,picStartX,0,playerWidth,playerHeight,0ffffffh
     popa
     ret
 DrawPlayer ENDP
 
-DrawNumber PROC hDC:DWORD,num:DWORD,num_posX:DWORD,num_posY:DWORD,num_width:DWORD,num_height:DWORD
-    pusha
 
-    popa
-    ret
-DrawNumber ENDP  
 END
