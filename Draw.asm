@@ -96,9 +96,9 @@ DrawGamePlayWin PROC hDC:DWORD
     invoke DrawPole,hDC
     invoke DrawNumberArray,hDC,score,325,20,20,30,0ffffffh
     .IF life > 99
-        invoke DrawNumberArray,hDC,99,200,60,16,24,0ffffffh
+        invoke DrawNumberArray,hDC,99,220,55,16,24,0ffffffh
     .ELSE
-        invoke DrawNumberArray,hDC,life,200,60,16,24,0ffffffh
+        invoke DrawNumberArray,hDC,life,220,55,16,24,0ffffffh
     .ENDIF
     ret
 DrawGamePlayWin ENDP
