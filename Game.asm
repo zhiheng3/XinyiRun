@@ -32,11 +32,33 @@ history_scene DWORD ?
 hold_remain SDWORD -100
 move_remain SDWORD -100
 
+;Public vars defination
+scene DWORD 0
+total_frames DWORD 0
+;Scene 0
+selected_menu DWORD 0
+;Scene 2
+pilars Pilar PILAR_NUM DUP(<0, 0, 0>)
+player_x DWORD 0
+player_y DWORD 0
+player_f DWORD 0
+pole_x0 DWORD 0
+pole_y0 DWORD 0
+pole_x1 DWORD 0
+pole_y1 DWORD 0
+life DWORD 0
+score DWORD 0
+total_bonus DWORD 0
+add_bonus DWORD 0
+flagZ DWORD 0
+flagX DWORD 0
+;Scene 3
+high_score DWORD 0
+
 
 ;Tools
 widen_remain SDWORD 0
-flagZ BYTE 0
-flagX BYTE 0
+
 
 .code
 ;Initializaiton
@@ -313,17 +335,39 @@ Scene1KeydownHandler PROC wParam:DWORD
 Scene1KeydownHandler ENDP
 
 Scene2KeydownHandler PROC wParam:DWORD
+    .IF state != ST_STAND
+        return 0
+    .ENDIF
     switch wParam
-        case VK_RETURN
+        case VK_RETURN ;Test
             mov eax, pilars[TYPE pilars].start_x
             sub eax, GAP_RANDOM_RANGE_START
             mov move_remain, eax
             return 0
-        case VK_Z
-            mov widen_remain, 10
+        case VK_ESCAPE ;Exit
+            mov selected_menu, 0
+            mov scene, 0
+            return 0
+        case VK_H ;Help
+            mov history_scene, 2
+            mov scene, 1
+            return 0
+        case VK_Z ;Tool Z
+            .IF flagZ == 0
+                mov widen_remain, 10
+                mov flagZ, 1
+            .ENDIF
             ;mov state, ST_WIDEN
             return 0
-        case VK_SPACE
+        case VK_X ;Tool X
+            .IF flagX == 0
+                mov widen_remain, 10
+                mov flagX, 1
+            .ENDIF
+            return 0
+        case VK_C ;Tool C
+            return 0
+        case VK_SPACE ;Play
             mov state, ST_RUN
             return 0
     endsw

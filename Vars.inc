@@ -40,7 +40,9 @@ EXTERNDEF pilars:Pilar, ;Array of pilars
 EXTERNDEF life:DWORD, ;Remain lives
           score:DWORD, ;Current score
           total_bonus:DWORD, ;Current bonus(Could be accumulated)
-          add_bonus:DWORD ;Latest bonus
+          add_bonus:DWORD, ;Latest bonus
+          flagZ:DWORD,
+          flagX:DWORD
 
 ;Scene 3
 EXTERNDEF high_score:DWORD ;Highest score stored
