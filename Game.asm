@@ -472,7 +472,7 @@ GameStart PROC
     INVOKE InitialPilar
     mov total_frames, 0
     mov score, 0
-    mov total_bonus, 20
+    mov total_bonus, 0
     mov add_bonus, 0
     mov life, 1
     INVOKE GameSet
@@ -496,6 +496,8 @@ GameProc PROC uses eax ebx
             ret
         case ST_ROTATE
             .IF poleAng <= 0
+                mov ebx, bonus
+                mov add_bonus, ebx
                 mov state, ST_RUN
                 ret
             .ENDIF
@@ -512,6 +514,7 @@ GameProc PROC uses eax ebx
             add player_x, 4
             mov eax, finalX
             .IF player_x >= eax
+                mov add_bonus, 0
                 mov player_x, eax
                 .IF isDead == 0
                     inc score   
@@ -663,6 +666,9 @@ Scene2KeydownHandler PROC wParam:DWORD
             return 0
         case VK_SPACE ;Play
             mov state, ST_HOLD
+            return 0
+        case VK_A
+            add total_bonus, 100
             return 0
     endsw
     return 0
