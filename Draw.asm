@@ -105,13 +105,17 @@ DrawGamePlayWin PROC hDC:DWORD
     .ENDIF
     invoke DrawNumberArray,hDC,total_bonus,295,53,16,24,0ffffffh
 
-    invoke DrawPictureTransparent,hDC,340,10,10,0,0,50,50,50,50,0ffffffh
+    .IF flagSound == 0
+        invoke DrawPictureTransparent,hDC,340,10,10,0,0,50,50,50,50,0ffffffh
+    .ELSE
+        invoke DrawPictureTransparent,hDC,341,10,10,0,0,50,50,50,50,0ffffffh
+    .ENDIF
     ;invoke DrawPictureTransparent,hDC,340,10,10,0,0,50,50,50,50,0ffffffh
 
     .IF flagZ == 0
-        invoke DrawPictureTransparent,hDC,351,400,10,0,0,50,70,50,70,0ffffffh
-    .ELSEIF
         invoke DrawPictureTransparent,hDC,350,400,10,0,0,50,70,50,70,0ffffffh
+    .ELSEIF
+        invoke DrawPictureTransparent,hDC,351,400,10,0,0,50,70,50,70,0ffffffh
     .ENDIF
     .IF flagX == 0
         invoke DrawPictureTransparent,hDC,310,460,10,0,0,50,70,50,70,0ffffffh
@@ -125,8 +129,13 @@ DrawGamePlayWin ENDP
 
 DrawGameOverWin PROC hDC:DWORD
     invoke DrawBackground,hDC,400
-    invoke DrawPictureTransparent,hDC,410,270,270,0,0,120,60,120,60,0ffffffh
-    invoke DrawPictureTransparent,hDC,130,430,270,0,0,120,60,120,60,0ffffffh
+    .IF selected_menu3 == 0
+        invoke DrawPictureTransparent,hDC,411,270,270,0,0,120,60,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,130,430,270,0,0,120,60,120,60,0ffffffh
+    .ELSE
+        invoke DrawPictureTransparent,hDC,410,270,270,0,0,120,60,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,131,430,270,0,0,120,60,120,60,0ffffffh
+    .ENDIF
 
     invoke DrawNumberArray,hDC,score,510,160,15,30,0ffffffh
     invoke DrawNumberArray,hDC,high_score,510,198,15,30,0ffffffh

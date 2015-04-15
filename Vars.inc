@@ -42,10 +42,12 @@ EXTERNDEF life:DWORD, ;Remain lives
           total_bonus:DWORD, ;Current bonus(Could be accumulated)
           add_bonus:DWORD, ;Latest bonus
           flagZ:DWORD,
-          flagX:DWORD
+          flagX:DWORD,
+          flagSound:DWORD
 
 ;Scene 3
-EXTERNDEF high_score:DWORD ;Highest score stored
+EXTERNDEF high_score:DWORD, ;Highest score stored
+		  selected_menu3:DWORD
 
 
 

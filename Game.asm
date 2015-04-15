@@ -76,8 +76,10 @@ total_bonus DWORD 0
 add_bonus DWORD 0
 flagZ DWORD 0
 flagX DWORD 0
+flagSound DWORD 0
 ;Scene 3
 high_score DWORD 0
+selected_menu3 DWORD 0
 
 
 ;Animations
@@ -472,7 +474,6 @@ GameStart PROC
     INVOKE InitialPilar
     mov total_frames, 0
     mov score, 0
-    mov total_bonus, 0
     mov add_bonus, 0
     mov life, 1
     INVOKE GameSet
@@ -514,6 +515,8 @@ GameProc PROC uses eax ebx
             add player_x, 4
             mov eax, finalX
             .IF player_x >= eax
+                mov ebx, add_bonus
+                add total_bonus, ebx
                 mov add_bonus, 0
                 mov player_x, eax
                 .IF isDead == 0
@@ -570,6 +573,11 @@ GameProc PROC uses eax ebx
             .IF player_y == 0
                 dec life
                 .IF life == 0
+                    mov ebx, score
+                    .IF ebx > high_score
+                        mov high_score, ebx
+                    .ENDIF
+                    mov selected_menu3, 0
                     mov scene, 3
                     ret
                 .ENDIF
@@ -645,6 +653,13 @@ Scene2KeydownHandler PROC wParam:DWORD
             mov scene, 1
             return 0
         case VK_S ;Sound
+            .IF flagSound == 0
+                ;Play Sound
+                mov flagSound, 1
+            .ELSE
+                ;Pause Sound
+                mov flagSound, 0
+            .ENDIF
             return 0
         case VK_Z ;Tool Z
             .IF flagZ == 0 && total_bonus >= COST_Z
@@ -695,30 +710,26 @@ Scene2KeyupHandler ENDP
 
 Scene3KeydownHandler PROC wParam:DWORD
     switch wParam
-        case VK_UP
-            .IF selected_menu > 0
-                dec selected_menu
+        case VK_LEFT
+            .IF selected_menu3 > 0
+                dec selected_menu3
             .ENDIF
             return 0
-        case VK_DOWN
-            .IF selected_menu < 2
-                inc selected_menu
+        case VK_RIGHT
+            .IF selected_menu3 < 1
+                inc selected_menu3
             .ENDIF
             return 0
         case VK_RETURN
-            .IF selected_menu == 0
+            .IF selected_menu3 == 0
                 INVOKE GameStart
                 return 0
-            .ELSEIF selected_menu == 1
-                mov history_scene, 0
-                mov scene, 1
+            .ELSE
                 mov selected_menu, 0
+                mov scene, 0
                 return 0
-            .ELSEIF selected_menu == 2
-                return 1
             .ENDIF
     endsw
-    return 0
     return 0
 Scene3KeydownHandler ENDP
 
