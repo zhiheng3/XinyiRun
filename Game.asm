@@ -193,12 +193,13 @@ Cos ENDP
 Random   proc uses ecx edx,
     first:DWORD, second:DWORD
    mov      eax, random_seed
-   .IF total_frames > 0
-       add      eax, total_frames
-   .ENDIF
+   ;.IF total_frames > 0
+   ;    add      eax, total_frames
+   ;.ENDIF
    mov      ecx, 23
    mul      ecx
    add      eax, 7
+   mov      random_seed, eax
    mov      ecx, second
    sub      ecx, first
    inc      ecx
@@ -206,7 +207,6 @@ Random   proc uses ecx edx,
    div      ecx
    add      edx, first
    mov      eax, edx
-   mov      random_seed, eax
    ret
 Random   endp
 
