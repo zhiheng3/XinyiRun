@@ -48,6 +48,8 @@ cos_value DWORD 0,9998,9993,9986,9975,9961,9945,9925,9902,9876,9848,
                   8571,8480,8386,8290,8191,8090,7986,7880,7771,7660,
                   7547,7431,7313,7193,7071
 
+records DWORD 0, 0
+
 .code
 
 start:
@@ -279,44 +281,19 @@ Cos PROC USES esi ebx, x:SDWORD
 Cos ENDP
 
 main PROC
-    cls
-    ;print "Hello World",13,10
-    INVOKE GetTickCount
-    mov random_seed, eax
-    
-    ;INVOKE RotatePole, 19,70
-    ;printf("%d\n", pole_x1)
-    ;printf("%d\n", pole_y1)
-    ;INVOKE InitialPilar
-
-    ;INVOKE DisplayPilars
-
-    ;INVOKE DeletePilar
-
-    ;INVOKE DisplayPilars
-
-    INVOKE Sin, 90
-    printf("%d\n", eax)
-    INVOKE Cos, 80
-    printf("%d\n", eax)
-
-    ;push ecx
-    ;printf ("---------------\n")
-    ;pop ecx
-
-    ;INVOKE MovePilar
-    ;mov ecx, 5
-    ;mov esi, 0
-    ;L2:
-    ;push ecx
-    ;;printf("%d\n", ecx)
-    ;printf("%d\n", pilars[esi].start_x)
-    ;printf("%d\n", pilars[esi].end_x)
-    ;printf("%d\n", pilars[esi].height)
-    ;printf("\n")
-    ;add esi, TYPE pilars
-    ;pop ecx
-    ;loop L2
+    LOCAL hFile:DWORD
+    LOCAL bwrt:DWORD 
+    .IF rv(exist, "record.xyz") == 0
+        mov hFile, fcreate("record.xyz") 
+    .ELSE
+        mov hFile, fopen("record.xyz")
+    .ENDIF
+    mov ebx, 100
+    mov records[0], ebx
+    mov ebx, 100
+    mov records[4], ebx
+    mov bwrt, fwrite(hFile, ADDR records, 8);
+    fclose(hFile)
 
     ret
 main ENDP

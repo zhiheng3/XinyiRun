@@ -96,9 +96,49 @@ isDown   DWORD 0
 bonus    DWORD 0
 finalX   DWORD 0
 maxX     DWORD 0
+records  DWORD 0, 0
 
 
 .code
+
+LoadRecord PROC USES ebx
+    LOCAL hFile:DWORD
+    LOCAL bwrt:DWORD 
+    LOCAL flen:DWORD
+    .IF rv(exist, "record.xyz") == 0
+        ret
+    .ELSE
+        mov hFile, fopen("record.xyz")
+    .ENDIF
+    mov flen, fsize(hFile)
+    .IF flen < 8
+        ret
+    .ENDIF
+    mov bwrt, fread(hFile, ADDR records, 8)
+    mov ebx, records[0]
+    mov high_score, ebx
+    mov ebx, records[4]
+    mov total_bonus, ebx
+    fclose(hFile)
+    ret
+LoadRecord ENDP
+
+SaveRecord PROC USES ebx
+    LOCAL hFile:DWORD
+    LOCAL bwrt:DWORD 
+    .IF rv(exist, "record.xyz") == 0
+        mov hFile, fcreate("record.xyz") 
+    .ELSE
+        mov hFile, fopen("record.xyz")
+    .ENDIF
+    mov ebx, high_score
+    mov records[0], ebx
+    mov ebx, total_bonus
+    mov records[4], ebx
+    mov bwrt, fwrite(hFile, ADDR records, 8);
+    fclose(hFile)
+    ret
+SaveRecord ENDP
 ;Initializaiton
 InitGame PROC
     INVOKE GetTickCount
@@ -106,6 +146,7 @@ InitGame PROC
 
     mov flagSound, 1
     mov scene, 0
+    INVOKE LoadRecord
 
     ;Scene0
     mov selected_menu, 0
@@ -475,6 +516,7 @@ CalcResult ENDP
 
 ;Set the player's and pole's position
 GameSet PROC USES ebx esi
+    INVOKE SaveRecord
     ;Player
     mov ebx, pilars[0].start_x
     mov player_x, ebx
@@ -626,6 +668,7 @@ GameProc PROC uses eax ebx
                     .IF flagSound == 1
                         INVOKE PlayGameover
                     .ENDIF
+                    INVOKE SaveRecord
                     mov scene, 3
                     ret
                 .ENDIF
