@@ -35,7 +35,8 @@ EXTERNDEF pilars:Pilar, ;Array of pilars
           pole_x0:SDWORD, ;Pole left x-coor
           pole_y0:SDWORD, ;Pole left y-coor
           pole_x1:SDWORD, ;Pole right x-coor
-          pole_y1:SDWORD ;Pole right y-coor
+          pole_y1:SDWORD, ;Pole right y-coor
+          pole_speed:DWORD ;Pole increase speed
 
 EXTERNDEF life:DWORD, ;Remain lives
           score:DWORD, ;Current score

@@ -70,6 +70,7 @@ pole_x0 SDWORD 0
 pole_y0 SDWORD 0
 pole_x1 SDWORD 0
 pole_y1 SDWORD 0
+pole_speed DWORD 4
 life DWORD 0
 score DWORD 0
 total_bonus DWORD 0
@@ -102,6 +103,7 @@ InitGame PROC
     INVOKE GetTickCount
     mov random_seed, eax
 
+    mov flagSound, 1
     mov scene, 0
 
     ;Scene0
@@ -163,6 +165,29 @@ Random   proc uses ecx edx,
    mov      random_seed, eax
    ret
 Random   endp
+
+;BGM
+PlayBGM PROC
+    INVOKE PlaySound,NULL,hInstance,SND_PURGE
+    mov eax,SND_RESOURCE
+    or eax,SND_ASYNC
+    or eax,SND_LOOP
+    INVOKE PlaySound,1000,hInstance,eax
+    ret
+PlayBGM ENDP
+
+PauseBGM PROC
+    INVOKE PlaySound,NULL,hInstance,SND_PURGE          
+    ret
+PauseBGM ENDP
+
+PlayGameover PROC
+    mov eax, SND_RESOURCE
+    or eax, SND_ASYNC
+    or eax, SND_NOSTOP
+    INVOKE PlaySound,1001,hInstance,eax
+    ret
+PlayGameover ENDP
 
 ;Pilars operation
 ;Insert a random pilar ranged from 20 to 100 to pilars[4]
@@ -472,11 +497,19 @@ GameSet ENDP
 
 GameStart PROC
     INVOKE InitialPilar
+    mov pole_speed, 4
     mov total_frames, 0
     mov score, 0
     mov add_bonus, 0
     mov life, 1
     INVOKE GameSet
+
+    .IF flagSound == 1
+        INVOKE PlayBGM
+    .ELSE
+        INVOKE PauseBGM
+    .ENDIF
+
     mov state, ST_STAND
     mov scene, 2
     ret
@@ -488,7 +521,7 @@ GameProc PROC uses eax ebx
         case ST_STAND
             ret
         case ST_HOLD
-            INVOKE ExtendPole, 4
+            INVOKE ExtendPole, pole_speed
             mov ebx, maxX
             .IF poleLen > ebx
                 INVOKE CalcResult
@@ -506,7 +539,9 @@ GameProc PROC uses eax ebx
             INVOKE CalcPole
             ret
         case ST_RUN
-            .IF total_frames & 1
+            mov ebx, 7
+            and ebx, total_frames
+            .IF ebx == 0
                 inc player_f
             .ENDIF
             .IF player_f == 7
@@ -578,6 +613,10 @@ GameProc PROC uses eax ebx
                         mov high_score, ebx
                     .ENDIF
                     mov selected_menu3, 0
+                    INVOKE PauseBGM
+                    .IF flagSound == 1
+                        INVOKE PlayGameover
+                    .ENDIF
                     mov scene, 3
                     ret
                 .ENDIF
@@ -609,12 +648,6 @@ Scene0KeydownHandler PROC wParam:DWORD
                 mov history_scene, 0
                 mov scene, 1
                 mov selected_menu, 0
-                push eax
-                mov eax,SND_RESOURCE
-                or eax,SND_ASYNC
-                or eax,SND_LOOP
-                INVOKE PlaySound,1000,hInstance,eax
-                pop eax
                 return 0
             .ELSEIF selected_menu == 2
                 return 1
@@ -628,38 +661,37 @@ Scene1KeydownHandler PROC wParam:DWORD
         case VK_ESCAPE
             mov eax, history_scene
             mov scene, eax
-            INVOKE PlaySound,NULL,hInstance,SND_ASYNC
             return 0
     endsw
     return 0
 Scene1KeydownHandler ENDP
 
 Scene2KeydownHandler PROC wParam:DWORD
+    .IF wParam == VK_S
+        .IF flagSound == 0
+            INVOKE PlayBGM
+            mov flagSound, 1
+        .ELSE
+            INVOKE PauseBGM
+            mov flagSound, 0
+        .ENDIF
+        return 0
+    .ENDIF
+
     .IF state != ST_STAND
         return 0
     .ENDIF
     switch wParam
         case VK_RETURN ;Test
-            mov eax, pilars[TYPE pilars].start_x
-            sub eax, GAP_RANDOM_RANGE_START
-            mov move_remain, eax
             return 0
         case VK_ESCAPE ;Exit
+            INVOKE PauseBGM
             mov selected_menu, 0
             mov scene, 0
             return 0
         case VK_H ;Help
             mov history_scene, 2
             mov scene, 1
-            return 0
-        case VK_S ;Sound
-            .IF flagSound == 0
-                ;Play Sound
-                mov flagSound, 1
-            .ELSE
-                ;Pause Sound
-                mov flagSound, 0
-            .ENDIF
             return 0
         case VK_Z ;Tool Z
             .IF flagZ == 0 && total_bonus >= COST_Z

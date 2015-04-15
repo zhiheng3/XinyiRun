@@ -48,6 +48,7 @@
 411 BITMAP DISCARDABLE "./image/replay_clicked.bmp"
 
 1000 WAVE "./music/BGM.wav"
+1001 WAVE "./music/Gameover.wav"
 VS_VERSION_INFO VERSIONINFO
 FILEVERSION 1, 0, 0, 0
 PRODUCTVERSION 1, 0, 0, 0
