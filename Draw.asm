@@ -84,8 +84,22 @@ DrawHelpWin ENDP
 
 DrawGamePlayWin PROC hDC:DWORD
     LOCAL rect:RECT
+    LOCAL bonusID:DWORD
     invoke GetClientRect,hWnd,addr rect
     invoke DrawBackground,hDC,300
+    .IF add_bonus > 0
+        .IF add_bonus == 1
+            mov bonusID, 370
+        .ELSEIF add_bonus == 5
+            mov bonusID, 371
+        .ELSEIF add_bonus == 10
+            mov bonusID, 372
+        .ELSE
+            mov bonusID, 373
+        .ENDIF
+        invoke DrawPictureTransparent,hDC, bonusID,bonusX, 170, 0, 0, 100, 100, 100, 100, 0ffffffh
+    .ENDIF
+    
     push eax
     mov eax,basePosY
     add eax,baseHeight

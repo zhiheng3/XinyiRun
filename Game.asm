@@ -11,8 +11,8 @@ include Vars.inc
 
 ;macro vars
 HEIGHT = 100
-PILAR_RANDOM_RANGE_START = 20
-PILAR_RANDOM_RANGE_END = 100
+PILAR_RANDOM_RANGE_START = 10
+PILAR_RANDOM_RANGE_END = 80
 GAP_RANDOM_RANGE_START = 50
 GAP_RANDOM_RANGE_END = 200
 POLE_INIT = 10
@@ -75,6 +75,7 @@ life DWORD 0
 score DWORD 0
 total_bonus DWORD 0
 add_bonus DWORD 0
+bonusX DWORD 100
 flagZ DWORD 0
 flagX DWORD 0
 flagSound DWORD 0
@@ -239,9 +240,16 @@ InsertPilar PROC USES eax ebx ecx edx esi
 InsertPilar ENDP
 
 ;Initial the pilars array which length is PILAR_NUM
-InitialPilar PROC USES ecx
+InitialPilar PROC USES ecx esi
     mov ecx, PILAR_NUM
-
+    mov esi, 0
+    L2:
+        mov pilars[esi].start_x, 0
+        mov pilars[esi].end_x, 0
+        mov pilars[esi].height, 0
+        add esi, TYPE pilars
+    loop L2
+    mov ecx, PILAR_NUM
     L1:
     INVOKE InsertPilar
     loop L1
@@ -405,6 +413,7 @@ CalcResult PROC USES eax ebx esi;Calculate the result of move
     mov eax, pilars[esi].end_x
     add eax, poleLen
     mov finalX, eax
+    mov bonusX, eax
 
     add esi, structSize
     mov bonus, 0
@@ -497,7 +506,7 @@ GameSet ENDP
 
 GameStart PROC
     INVOKE InitialPilar
-    mov pole_speed, 4
+    mov pole_speed, 2
     mov total_frames, 0
     mov score, 0
     mov add_bonus, 0
@@ -547,7 +556,7 @@ GameProc PROC uses eax ebx
             .IF player_f == 7
                 mov player_f, 0
             .ENDIF 
-            add player_x, 4
+            add player_x, 2
             mov eax, finalX
             .IF player_x >= eax
                 mov ebx, add_bonus

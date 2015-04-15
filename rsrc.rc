@@ -42,6 +42,10 @@
 351 BITMAP DISCARDABLE "./image/button/stretch_used.bmp"
 361 BITMAP DISCARDABLE "./image/player_walk.bmp"
 362 BITMAP DISCARDABLE "./image/stand.bmp"
+370 BITMAP DISCARDABLE "./image/bonus/1bonus.bmp"
+371 BITMAP DISCARDABLE "./image/bonus/5bonus.bmp"
+372 BITMAP DISCARDABLE "./image/bonus/10bonus.bmp"
+373 BITMAP DISCARDABLE "./image/bonus/20bonus.bmp"
 
 400 BITMAP DISCARDABLE "./image/XinyiRun_gameover.bmp"
 410 BITMAP DISCARDABLE "./image/replay.bmp"

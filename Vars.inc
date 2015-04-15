@@ -46,6 +46,8 @@ EXTERNDEF life:DWORD, ;Remain lives
           flagX:DWORD,
           flagSound:DWORD
 
+EXTERNDEF bonusX:DWORD
+
 ;Scene 3
 EXTERNDEF high_score:DWORD, ;Highest score stored
 		  selected_menu3:DWORD
