@@ -42,7 +42,7 @@ deci DWORD 10
 numS_width DWORD 118
 numS_height DWORD 236
 numberoffset DWORD 80
-
+maxLife DWORD 100
 .code
 DrawProc PROC hDC:DWORD
     .IF scene == 0
@@ -62,17 +62,17 @@ DrawProc ENDP
 DrawStartMenu PROC hDC:DWORD
     invoke DrawBackground,hDC,100
     .IF selected_menu == 0
-        invoke DrawPictureTransparent,hDC,111,250,150,0,0,120,60,472,236,0ffffffh
-        invoke DrawPictureTransparent,hDC,120,250,220,0,0,120,60,472,236,0ffffffh
-        invoke DrawPictureTransparent,hDC,130,250,290,0,0,120,60,472,236,0ffffffh
+        invoke DrawPictureTransparent,hDC,111,250,150,0,0,120,60,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,120,250,220,0,0,120,60,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,130,250,290,0,0,120,60,120,60,0ffffffh
     .ELSEIF selected_menu == 1
-        invoke DrawPictureTransparent,hDC,110,250,150,0,0,120,60,472,236,0ffffffh
-        invoke DrawPictureTransparent,hDC,121,250,220,0,0,120,60,472,236,0ffffffh
-        invoke DrawPictureTransparent,hDC,130,250,290,0,0,120,60,472,236,0ffffffh
+        invoke DrawPictureTransparent,hDC,110,250,150,0,0,120,60,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,121,250,220,0,0,120,60,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,130,250,290,0,0,120,60,120,60,0ffffffh
     .ELSEIF selected_menu == 2
-        invoke DrawPictureTransparent,hDC,110,250,150,0,0,120,60,472,236,0ffffffh
-        invoke DrawPictureTransparent,hDC,120,250,220,0,0,120,60,472,236,0ffffffh
-        invoke DrawPictureTransparent,hDC,131,250,290,0,0,120,60,472,236,0ffffffh
+        invoke DrawPictureTransparent,hDC,110,250,150,0,0,120,60,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,120,250,220,0,0,120,60,120,60,0ffffffh
+        invoke DrawPictureTransparent,hDC,131,250,290,0,0,120,60,120,60,0ffffffh
     .ENDIF
     ret
 DrawStartMenu ENDP
@@ -96,20 +96,41 @@ DrawGamePlayWin PROC hDC:DWORD
     invoke DrawPole,hDC
     invoke DrawNumberArray,hDC,score,325,20,20,30,0ffffffh
     .IF life > 99
-        invoke DrawNumberArray,hDC,99,220,53,16,24,0ffffffh
+        xor edx,edx
+        mov eax,life
+        div maxLife
+        invoke DrawNumberArray,hDC,edx,220,53,16,24,0ffffffh
     .ELSE
         invoke DrawNumberArray,hDC,life,220,53,16,24,0ffffffh
     .ENDIF
-    .IF total_bonus > 99
-        invoke DrawNumberArray,hDC,99,295,53,16,24,0ffffffh
-    .ELSE
-        invoke DrawNumberArray,hDC,total_bonus,295,53,16,24,0ffffffh
+    invoke DrawNumberArray,hDC,total_bonus,295,53,16,24,0ffffffh
+
+    invoke DrawPictureTransparent,hDC,340,10,10,0,0,50,50,50,50,0ffffffh
+    ;invoke DrawPictureTransparent,hDC,340,10,10,0,0,50,50,50,50,0ffffffh
+
+    .IF flagZ == 0
+        invoke DrawPictureTransparent,hDC,351,400,10,0,0,50,70,50,70,0ffffffh
+    .ELSEIF
+        invoke DrawPictureTransparent,hDC,350,400,10,0,0,50,70,50,70,0ffffffh
     .ENDIF
+    .IF flagX == 0
+        invoke DrawPictureTransparent,hDC,310,460,10,0,0,50,70,50,70,0ffffffh
+    .ELSEIF
+        invoke DrawPictureTransparent,hDC,311,460,10,0,0,50,70,50,70,0ffffffh
+    .ENDIF    
+    invoke DrawPictureTransparent,hDC,330,520,10,0,0,50,70,50,70,0ffffffh
+    invoke DrawPictureTransparent,hDC,320,580,10,0,0,50,70,50,70,0ffffffh
     ret
 DrawGamePlayWin ENDP
 
 DrawGameOverWin PROC hDC:DWORD
-    invoke DrawBackground,hDC,400    
+    invoke DrawBackground,hDC,400
+    invoke DrawPictureTransparent,hDC,410,270,270,0,0,120,60,120,60,0ffffffh
+    invoke DrawPictureTransparent,hDC,130,430,270,0,0,120,60,120,60,0ffffffh
+
+    invoke DrawNumberArray,hDC,score,510,160,15,30,0ffffffh
+    invoke DrawNumberArray,hDC,high_score,510,198,15,30,0ffffffh
+    invoke DrawNumberArray,hDC,total_bonus,510,234,15,30,0ffffffh
     ret
 DrawGameOverWin ENDP
 

@@ -44,6 +44,9 @@
 362 BITMAP DISCARDABLE "./image/stand.bmp"
 
 400 BITMAP DISCARDABLE "./image/XinyiRun_gameover.bmp"
+410 BITMAP DISCARDABLE "./image/replay.bmp"
+411 BITMAP DISCARDABLE "./image/replay_clicked.bmp"
+
 1000 WAVE "./music/BGM.wav"
 VS_VERSION_INFO VERSIONINFO
 FILEVERSION 1, 0, 0, 0
