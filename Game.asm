@@ -146,7 +146,6 @@ InitGame PROC
 
     mov flagSound, 1
     mov scene, 0
-    INVOKE LoadRecord
 
     ;Scene0
     mov selected_menu, 0
@@ -606,7 +605,11 @@ GameProc PROC uses eax ebx
                 mov add_bonus, 0
                 mov player_x, eax
                 .IF isDead == 0
-                    inc score   
+                    inc score
+                    mov ebx, score
+                    .IF ebx > high_score
+                        mov high_score, ebx
+                    .ENDIF
                     mov eax, pilars[TYPE pilars].start_x
                     sub eax, GAP_RANDOM_RANGE_START
                     mov move_remain, eax
@@ -659,10 +662,6 @@ GameProc PROC uses eax ebx
             .IF player_y == 0
                 dec life
                 .IF life == 0
-                    mov ebx, score
-                    .IF ebx > high_score
-                        mov high_score, ebx
-                    .ENDIF
                     mov selected_menu3, 0
                     INVOKE PauseBGM
                     .IF flagSound == 1

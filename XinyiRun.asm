@@ -276,6 +276,8 @@ app_close:
         return 0
 
       case WM_CREATE
+        INVOKE LoadRecord
+        return 0
 
       case WM_SIZE
 
@@ -298,6 +300,7 @@ app_close:
         return 0
 
       case WM_CLOSE
+        INVOKE SaveRecord
       ; -----------------------------
       ; perform any required cleanups
       ; here before closing.

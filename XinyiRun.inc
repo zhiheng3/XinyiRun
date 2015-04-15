@@ -46,3 +46,5 @@
         GameProc         PROTO
         KeydownProc      PROTO wParam:DWORD
         KeyupProc        PROTO wParam:DWORD
+        LoadRecord       PROTO
+        SaveRecord       PROTO
