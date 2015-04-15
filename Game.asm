@@ -193,6 +193,9 @@ Cos ENDP
 Random   proc uses ecx edx,
     first:DWORD, second:DWORD
    mov      eax, random_seed
+   .IF total_frames > 0
+       add      eax, total_frames
+   .ENDIF
    mov      ecx, 23
    mul      ecx
    add      eax, 7
@@ -595,8 +598,8 @@ GameProc PROC uses eax ebx
                 inc player_f
             .ENDIF
             .IF player_f == 7
-                mov player_f, 0
-            .ENDIF 
+                mov player_f, 1
+            .ENDIF
             add player_x, 2
             mov eax, finalX
             .IF player_x >= eax
